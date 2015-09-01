@@ -1,0 +1,28 @@
+Onepay backend repository
+
+
+
+* Setting up postgres on local machine
+
+Switch to user postgres (sudo su postgres) and create a new user with password authentication option.
+$ createuser --interactive -P onepay
+Enter password for new role: 
+Enter it again: 
+Shall the new role be a superuser? (y/n) n
+Shall the new role be allowed to create databases? (y/n) y
+Shall the new role be allowed to create more new roles? (y/n) n
+
+Log in with user postgres and make a new database:
+CREATE DATABASE onepay WITH OWNER = onepay;
+
+Enable local onepay user login with passwords:
+change "local all postgres peer" to "local all postgres md5" in /etc/postgresql/9.3/main/pg_hba.conf
+
+login as onepay to database onepay:
+psql -U onepay -W -d onepay
+
+create schema:
+CREATE SCHEMA data AUTHORIZATION onepay;
+
+
+
