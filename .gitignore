@@ -1,0 +1,16 @@
+/*
+!src
+!src/main/java
+!src/main/resources/com/*
+src/main/webapp/META-INF
+src/main/webapp/WEB-INF/classes
+src/main/webapp/WEB-INF/lib
+src/main/webapp/widelookv3
+!pom.xml
+!README.txt
+!Procfile
+*.DS_Store
+*gwt-unitCache
+!system.properties
+!.gitignore
+!JavaFormattingProfile.xml
