@@ -1,3 +1,17 @@
+
+
+** GENERAL **
+
+Dependencies:
+* java 8
+* Spring
+* tomcat 8
+* When using eclipse lombok to eclipse
+
+
+
+** PAYMENT **
+
 Must often do maven update. Haven't researched why.
 
 Estonian pank payments (and some Finlands)
@@ -24,3 +38,8 @@ Now you need to add your key to the truststore.ks.
 Should work! :) 
 
 Right now only SEB payment is implemented
+
+
+** DATABASE **
+Database creation files are in onepay_base project. It is also described there how to set database up
+Configuration is in src/main/resources/db.resources file
