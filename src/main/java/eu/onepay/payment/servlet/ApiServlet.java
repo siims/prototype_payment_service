@@ -1,8 +1,6 @@
 package eu.onepay.payment.servlet;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Paths;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -33,11 +31,9 @@ public class ApiServlet extends HttpServlet {
         Gson gson = new Gson();
         PaymentRequest payRequest = gson.fromJson(json, PaymentRequest.class);
 
-
         OrderCredentials orderCrede = getOrderCredentials(payRequest);
         MerchantCredentials merchCrede = getMerchantCredentials(payRequest.merchantId);
-        Long paymentId = payRequest.paymentId;
-        PaymentCredential payCrede = getPayCrededentials(merchCrede.getMerchantId(), paymentId);
+        PaymentCredential payCrede = getPayCrededentials(merchCrede.getMerchantId(),  payRequest.paymentId);
 
         Form returnForm = getReturnForm(payCrede, orderCrede, merchCrede);
 
