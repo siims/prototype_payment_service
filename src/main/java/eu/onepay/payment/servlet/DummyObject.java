@@ -24,7 +24,7 @@ public class DummyObject {
             private MerchantCredentials merchCrede;
 
             @Override
-            public void init(PaymentCredential payCrede, OrderCredentials orderCrede, MerchantCredentials merchCrede) {
+            public void initAndVerify(PaymentCredential payCrede, OrderCredentials orderCrede, MerchantCredentials merchCrede) {
                 this.payCrede = payCrede;
                 // TODO Auto-generated method stub
                 this.orderCrede = orderCrede;
@@ -34,7 +34,7 @@ public class DummyObject {
 
             @Override
             public long getId() {
-                return 0;
+                return 23L;
             }
 
             @Override
@@ -46,7 +46,7 @@ public class DummyObject {
                 InputElement input;
 
                 Map<String, String> inputNameValue = new HashMap<>();
-                inputNameValue.put("VK_AMOUNT", Long.toString(orderCrede.getAmount()));
+                inputNameValue.put("VK_AMOUNT", Double.toString(orderCrede.getAmount()));
                 // kliendile tuleb VK_SND_ID eraldi võtta kui tal on custom lahenduse
                 inputNameValue.put("VK_SND_ID", "uid100010");
                 inputNameValue.put("VK_SERVICE", "1012");

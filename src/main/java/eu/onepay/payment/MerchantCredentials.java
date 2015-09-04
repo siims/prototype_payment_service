@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 public class MerchantCredentials {
 
+    public static final String CONTEXT_KEY = "merchantCredentials";
     private Map<String, PayMethod> privatePayMethods = new HashMap<>();
     private Long merchantId = 0L;
     
@@ -18,6 +19,11 @@ public class MerchantCredentials {
 
     public void setMerchantId(Long merchantId) {
         this.merchantId = merchantId;
+    }
+
+    public String getName() {
+        // TODO Auto-generated method stub
+        return null;
     }
 
 }

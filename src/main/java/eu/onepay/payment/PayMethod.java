@@ -14,7 +14,7 @@ public interface PayMethod {
      * @param orderCrede
      * @param merchCrede
      */
-    public void init(PaymentCredential payCrede, OrderCredentials orderCrede, MerchantCredentials merchCrede);
+    public void initAndVerify(PaymentCredential payCrede, OrderCredentials orderCrede, MerchantCredentials merchCrede);
 
     /**
      * 

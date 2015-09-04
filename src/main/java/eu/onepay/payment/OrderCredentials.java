@@ -9,24 +9,26 @@ package eu.onepay.payment;
  */
 public class OrderCredentials {
 
-    private long id = 0L;
-    private long ammount = 0L;
+    private String id = "";
+    //TODO amount should be double i guess.
+    private Double amount = 0.0;
     private String description = "";
+    private Long referenceNo = 0L;
 
-    public long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public long getAmount() {
-        return ammount;
+    public Double getAmount() {
+        return amount;
     }
 
-    public void setAmmount(long ammount) {
-        this.ammount = ammount;
+    public void setAmount(Double amount) {
+        this.amount = amount;
     }
 
     public String getDescription() {
@@ -35,6 +37,14 @@ public class OrderCredentials {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Long getReferenceNo() {
+        return referenceNo;
+    }
+
+    public void setReferenceNo(Long referenceNo) {
+        this.referenceNo = referenceNo;
     }
 
 }

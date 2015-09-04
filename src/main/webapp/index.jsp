@@ -1,3 +1,4 @@
+<%@ page contentType="text/html; charset=UTF-8" %>
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
@@ -5,28 +6,22 @@
 </head>
 <script>
 
-	var response = {
-		merchant_data: {
-			merchant_id: "1234"
-		},
-		payment_data: {
-			currency: "EUR",
-			pay_option: "seb",
-			success: "/some/url",
-			fail: "/some/url",
-			cancel: "/some/url"
-		},
-		order_data:{
-			orderId: "€˜12345",
+	var data = {
+			merchant_id: "1234",
+			pay_option: "23",
+			order_id: "12345",
 			amount: "123",
-			
-			reference_no: "12345",
-			explanation: "text text text",
-		}
+			reference_no: "12344",
+			explanation: "text text text"
+		
 	}
 	var form;
 	$.ajax({
-		url:"/pankpayment/form",
+		url:"/pankpayment/pay",
+		method:"POST",
+		processData: false,
+		data: JSON.stringify(data),
+		contentType: "application/javascript; charset=utf-8",
 		success:function(response){
 			$("#response").text(response);
 			form = $(response);
@@ -45,10 +40,8 @@
 index.jsp
 <div id="response"></div>
 
-<button onclick="submitForm()">
+<button onclick="submitForm()"> send the form to bank</button>
 
 
-
-</form>
 </body>
 </html>

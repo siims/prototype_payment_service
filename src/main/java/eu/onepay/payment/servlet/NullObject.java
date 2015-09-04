@@ -11,7 +11,7 @@ public class NullObject {
         return new PayMethod() {
 
             @Override
-            public void init(PaymentCredential payCrede, OrderCredentials orderCrede, MerchantCredentials merchCrede) {
+            public void initAndVerify(PaymentCredential payCrede, OrderCredentials orderCrede, MerchantCredentials merchCrede) {
             }
 
             @Override

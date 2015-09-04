@@ -15,9 +15,6 @@ import java.security.PublicKey;
 import java.security.Signature;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.TimeZone;
 
 import org.apache.commons.codec.binary.Base64;
 
@@ -25,7 +22,7 @@ public class BankEE {
 
     public static String ENCODING = "UTF-8";
 
-    private static String keyLocation = "src/main/resources/truststore.ks";
+    public static String keyLocation = "src/main/resources/truststore.ks";
 
     String getMac(String[] data, String alias, boolean isPrivate) {
 
@@ -33,8 +30,9 @@ public class BankEE {
 
         try {
             Signature signingEngine = getSignature(isPrivate, alias);
-
-            byte[] bytes = generateMac(data).getBytes(ENCODING);
+            String generatedMac = generateMac(data);
+            System.out.println(generatedMac);
+            byte[] bytes = generatedMac.getBytes(ENCODING);
             signingEngine.update(bytes);
 
             mac = new String(Base64.encodeBase64(signingEngine.sign()), ENCODING);

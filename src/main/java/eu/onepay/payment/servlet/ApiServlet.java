@@ -1,13 +1,18 @@
 package eu.onepay.payment.servlet;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.google.gson.Gson;
 
 import eu.onepay.payment.MerchantCredentials;
 import eu.onepay.payment.OrderCredentials;
@@ -17,18 +22,22 @@ import eu.onepay.payment.html.Form;
 
 public class ApiServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
-    private HttpServletRequest req;
     private ServletContext servCtx;
 
-    public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         servCtx = request.getServletContext();
 
-        PaymentCredential payCrede = new PaymentCredential();
-        OrderCredentials orderCrede = new OrderCredentials();
-        MerchantCredentials merchCrede = new MerchantCredentials();
+        String json = request.getReader().lines().collect(Collectors.joining());
 
-        payCrede = checkForCustomCredentials(merchCrede.getMerchantId(), payCrede);
+        Gson gson = new Gson();
+        PaymentRequest payRequest = gson.fromJson(json, PaymentRequest.class);
+
+
+        OrderCredentials orderCrede = getOrderCredentials(payRequest);
+        MerchantCredentials merchCrede = getMerchantCredentials(payRequest.merchantId);
+        Long paymentId = payRequest.paymentId;
+        PaymentCredential payCrede = getPayCrededentials(merchCrede.getMerchantId(), paymentId);
 
         Form returnForm = getReturnForm(payCrede, orderCrede, merchCrede);
 
@@ -36,46 +45,63 @@ public class ApiServlet extends HttpServlet {
 
     }
 
-    private PaymentCredential checkForCustomCredentials(Long merchantId, PaymentCredential payCrede) {
-        PaymentCredential customPayCrede = getCustomPaymentCredentials(merchantId, payCrede.getPaymentId());
-        if (customPayCrede != null) {
-            payCrede = customPayCrede;
+    private MerchantCredentials getMerchantCredentials(Long merchantId) {
+        @SuppressWarnings("unchecked")
+        Map<Long, MerchantCredentials> merchantsCrede = (Map<Long, MerchantCredentials>) servCtx
+                .getAttribute(MerchantCredentials.CONTEXT_KEY);
+        MerchantCredentials merchantCrede = merchantsCrede.get(merchantId);
+        return merchantCrede;
+    }
+
+    private OrderCredentials getOrderCredentials(PaymentRequest payRequest) {
+        OrderCredentials orderCrede = new OrderCredentials();
+        orderCrede.setAmount(payRequest.amount);
+        orderCrede.setDescription(payRequest.explanation);
+        orderCrede.setId(payRequest.orderId);
+        orderCrede.setReferenceNo(payRequest.referenceNo);
+
+        return orderCrede;
+    }
+
+    private PaymentCredential getPayCrededentials(Long merchantId, Long paymentId) {
+        PaymentCredential payCrede = getCustomPaymentCredentials(merchantId, paymentId);
+        if (payCrede == null) {
+            payCrede = getDefaultPaymentCredential(paymentId);
         }
 
         return payCrede;
     }
 
+    @SuppressWarnings("unchecked")
+    private PaymentCredential getDefaultPaymentCredential(Long paymentId) {
+        Map<Long, PaymentCredential> payMethods = (Map<Long, PaymentCredential>) servCtx
+                .getAttribute(PaymentCredential.CREDE_KEY);
+        PaymentCredential payCredential = payMethods.get(paymentId);
+        return payCredential;
+    }
+
     private Form getReturnForm(PaymentCredential payCrede, OrderCredentials orderCrede, MerchantCredentials merchCrede) {
 
-        PayMethod method = getPaymentMethod(payCrede, merchCrede);
-        method.init(payCrede, orderCrede, merchCrede);
+        PayMethod method = getDefaultPaymentMethod(payCrede.getPaymentId());
+        method.initAndVerify(payCrede, orderCrede, merchCrede);
         Form retForm = method.asForm();
 
         return retForm;
     }
 
-    private PayMethod getPaymentMethod(PaymentCredential payCrede, MerchantCredentials merchCrede) {
-        Long paymentId = payCrede.getPaymentId();
-
-        PayMethod payMethod = getDefaultPaymentMethod(paymentId);
-
-        return payMethod;
-    }
-
-    @SuppressWarnings("unchecked")
     private PayMethod getDefaultPaymentMethod(Long paymentId) {
-
+        @SuppressWarnings("unchecked")
         Map<String, PayMethod> payMethods = (Map<String, PayMethod>) servCtx.getAttribute(PayMethod.CONTEXT_KEY);
 
         return payMethods.get(paymentId);
     }
 
-    @SuppressWarnings("unchecked")
     private PaymentCredential getCustomPaymentCredentials(Long merchantId, Long paymentId) {
 
         try {
+            @SuppressWarnings("unchecked")
             Map<String, Map<String, PaymentCredential>> merchantPayMethods = (Map<String, Map<String, PaymentCredential>>) servCtx
-                    .getAttribute(PaymentCredential.CUSTOM_METHODS_KEY);
+                    .getAttribute(PaymentCredential.CUSTOM_CREDE_KEY);
             Map<String, PaymentCredential> payCredentials = merchantPayMethods.get(merchantId);
             return payCredentials.get(paymentId);
         } catch (NullPointerException e) {
