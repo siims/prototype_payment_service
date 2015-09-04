@@ -31,7 +31,6 @@ public class BankEE {
         try {
             Signature signingEngine = getSignature(isPrivate, alias);
             String generatedMac = generateMac(data);
-            System.out.println(generatedMac);
             byte[] bytes = generatedMac.getBytes(ENCODING);
             signingEngine.update(bytes);
 
