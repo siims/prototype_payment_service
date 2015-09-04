@@ -45,7 +45,6 @@ public class BankEE {
     }
 
     String generateMac(String[] data) throws Exception {
-        // get data
         StringBuilder b = new StringBuilder();
 
         for (String par : data) {
