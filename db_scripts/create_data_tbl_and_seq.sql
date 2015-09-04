@@ -7,8 +7,10 @@ DROP TABLE IF EXISTS "data"."transaction";
 DROP SEQUENCE IF EXISTS "data"."transaction_id_seq";
 DROP TABLE IF EXISTS "data"."account";
 DROP SEQUENCE IF EXISTS "data"."account_id_seq";
-DROP TABLE IF EXISTS "data"."shop";
-DROP SEQUENCE IF EXISTS "data"."shop_id_seq";
+DROP TABLE IF EXISTS "data"."merchant_existing_payment_method";
+DROP SEQUENCE IF EXISTS "data"."merchant_existing_payment_method_id_seq";
+DROP TABLE IF EXISTS "data"."order";
+DROP SEQUENCE IF EXISTS "data"."order_id_seq";
 DROP TABLE IF EXISTS "data"."merchant";
 DROP SEQUENCE IF EXISTS "data"."merchant_id_seq";
 
@@ -106,7 +108,7 @@ ALTER TABLE "data"."contact" ADD FOREIGN KEY ("contact_type_id") REFERENCES "dat
 
 
 ----------------------------------------------------------------------
-------------------------- merchant -----------------------------------
+------------------------- merchant ---------------------------------------
 ----------------------------------------------------------------------
 
 -- Sequence structure
@@ -121,6 +123,7 @@ CREATE SEQUENCE "data"."merchant_id_seq"
 CREATE TABLE "data"."merchant" (
   "id" int8 DEFAULT nextval('"data".merchant_id_seq'::regclass) NOT NULL,
   "company_id" int8,
+  "normalized_name" varchar(50) COLLATE "default" NOT NULL,
   "active" bool DEFAULT true NOT NULL,
   "created_date" timestamp(6) DEFAULT now() NOT NULL,
   "modified_date" timestamp(6) DEFAULT now() NOT NULL
@@ -131,43 +134,10 @@ WITH (OIDS=FALSE);
 ALTER TABLE "data"."merchant" ADD PRIMARY KEY ("id");
 
 -- Uniques structure
-ALTER TABLE "data"."merchant" ADD UNIQUE ("company_id");
+ALTER TABLE "data"."merchant" ADD UNIQUE ("company_id", "normalized_name");
 
 -- Foreign Key structure
 ALTER TABLE "data"."merchant" ADD FOREIGN KEY ("company_id") REFERENCES "data"."company" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
-
-
-----------------------------------------------------------------------
-------------------------- shop ---------------------------------------
-----------------------------------------------------------------------
-
--- Sequence structure
-CREATE SEQUENCE "data"."shop_id_seq"
-  INCREMENT 1
-  MINVALUE 1
-  MAXVALUE 9223372036854775807
-  START 1
-  CACHE 1;
-
--- Table structure
-CREATE TABLE "data"."shop" (
-  "id" int8 DEFAULT nextval('"data".shop_id_seq'::regclass) NOT NULL,
-  "merchant_id" int8,
-  "normalized_name" varchar(50) COLLATE "default" NOT NULL,
-  "active" bool DEFAULT true NOT NULL,
-  "created_date" timestamp(6) DEFAULT now() NOT NULL,
-  "modified_date" timestamp(6) DEFAULT now() NOT NULL
-)
-WITH (OIDS=FALSE);
-
--- Primary Key structure
-ALTER TABLE "data"."shop" ADD PRIMARY KEY ("id");
-
--- Uniques structure
-ALTER TABLE "data"."shop" ADD UNIQUE ("merchant_id", "normalized_name");
-
--- Foreign Key structure
-ALTER TABLE "data"."shop" ADD FOREIGN KEY ("merchant_id") REFERENCES "data"."merchant" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 
 ----------------------------------------------------------------------
@@ -387,11 +357,11 @@ ALTER TABLE "data"."fee" ADD CHECK ("valid_from_date" < "valid_till_date"); -- F
 
 
 ----------------------------------------------------------------------
-------------------------- shop_existing_payment_method ---------------------------------------
+------------------------- merchant_existing_payment_method ---------------------------------------
 ----------------------------------------------------------------------
 
 -- Sequence structure
-CREATE SEQUENCE "data"."shop_existing_payment_method_id_seq"
+CREATE SEQUENCE "data"."merchant_existing_payment_method_id_seq"
   INCREMENT 1
   MINVALUE 1
   MAXVALUE 9223372036854775807
@@ -399,9 +369,9 @@ CREATE SEQUENCE "data"."shop_existing_payment_method_id_seq"
   CACHE 1;
 
 -- Table structure
-CREATE TABLE "data"."shop_existing_payment_method" (
-  "id" int8 DEFAULT nextval('"data".shop_existing_payment_method_id_seq'::regclass) NOT NULL,
-  "shop_id" int8,
+CREATE TABLE "data"."merchant_existing_payment_method" (
+  "id" int8 DEFAULT nextval('"data".merchant_existing_payment_method_id_seq'::regclass) NOT NULL,
+  "merchant_id" int8,
   "payment_method_id" int8,
   "active" bool DEFAULT true NOT NULL,
   "created_date" timestamp(6) DEFAULT now() NOT NULL,
@@ -410,11 +380,11 @@ CREATE TABLE "data"."shop_existing_payment_method" (
 WITH (OIDS=FALSE);
 
 -- Primary Key structure
-ALTER TABLE "data"."shop_existing_payment_method" ADD PRIMARY KEY ("id");
+ALTER TABLE "data"."merchant_existing_payment_method" ADD PRIMARY KEY ("id");
 
 -- Foreign Key structure
-ALTER TABLE "data"."shop_existing_payment_method" ADD FOREIGN KEY ("shop_id") REFERENCES "data"."shop" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
-ALTER TABLE "data"."shop_existing_payment_method" ADD FOREIGN KEY ("payment_method_id") REFERENCES "data"."payment_method" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE "data"."merchant_existing_payment_method" ADD FOREIGN KEY ("merchant_id") REFERENCES "data"."merchant" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE "data"."merchant_existing_payment_method" ADD FOREIGN KEY ("payment_method_id") REFERENCES "data"."payment_method" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 
 ----------------------------------------------------------------------
@@ -432,7 +402,7 @@ CREATE SEQUENCE "data"."account_id_seq"
 -- Table structure
 CREATE TABLE "data"."account" (
   "id" int8 DEFAULT nextval('"data".account_id_seq'::regclass) NOT NULL,
-  "shop_id" int8,
+  "merchant_id" int8,
   "currency_id" int4,
   "value" numeric(28,5) DEFAULT 0 NOT NULL, -- FIXME: what is the precision required for transactions?
   "num_transactions" int8 DEFAULT 0 NOT NULL,
@@ -447,11 +417,11 @@ WITH (OIDS=FALSE);
 ALTER TABLE "data"."account" ADD PRIMARY KEY ("id");
 
 -- Uniques structure
-ALTER TABLE "data"."account" ADD UNIQUE ("shop_id", "currency_id");
+ALTER TABLE "data"."account" ADD UNIQUE ("merchant_id", "currency_id");
 
 
 -- Foreign Key structure
-ALTER TABLE "data"."account" ADD FOREIGN KEY ("shop_id") REFERENCES "data"."shop" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE "data"."account" ADD FOREIGN KEY ("merchant_id") REFERENCES "data"."merchant" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
 ALTER TABLE "data"."account" ADD FOREIGN KEY ("currency_id") REFERENCES "data"."currency" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 
@@ -488,7 +458,45 @@ ALTER TABLE "data"."consumer" ADD PRIMARY KEY ("id");
 ALTER TABLE "data"."consumer" ADD UNIQUE ("name", "account_number", "fin_company_id");
 
 ----------------------------------------------------------------------
-------------------------- transaction ------------------------------------
+------------------------------- order --------------------------------
+----------------------------------------------------------------------
+
+-- Sequence structure
+CREATE SEQUENCE "data"."order_id_seq"
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 1
+  CACHE 1;
+
+-- Table structure
+CREATE TABLE "data"."order" (
+  "id" int8 DEFAULT nextval('"data".order_id_seq'::regclass) NOT NULL,
+  "merchant_id" int8,
+  "order_name" varchar(1000) COLLATE "default" NOT NULL,
+  "currency_id" int4,
+  "amount" numeric(28,5) DEFAULT 0 NOT NULL,
+  "reference_number" int8,
+  "explanation" varchar(1000) COLLATE "default",
+  "active" bool DEFAULT true NOT NULL,
+  "created_date" timestamp(6) DEFAULT now() NOT NULL,
+  "modified_date" timestamp(6) DEFAULT now() NOT NULL
+)
+WITH (OIDS=FALSE);
+
+-- Primary Key structure
+ALTER TABLE "data"."order" ADD PRIMARY KEY ("id");
+
+-- Uniques structure
+ALTER TABLE "data"."order" ADD UNIQUE ("merchant_id", "order_name");
+
+-- Foreign Key structure
+ALTER TABLE "data"."order" ADD FOREIGN KEY ("merchant_id") REFERENCES "data"."merchant" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE "data"."order" ADD FOREIGN KEY ("currency_id") REFERENCES "data"."currency" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+
+----------------------------------------------------------------------
+------------------------- transaction --------------------------------
 ----------------------------------------------------------------------
 
 -- Sequence structure
@@ -502,11 +510,10 @@ CREATE SEQUENCE "data"."transaction_id_seq"
 -- Table structure
 CREATE TABLE "data"."transaction" (
   "id" int8 DEFAULT nextval('"data".transaction_id_seq'::regclass) NOT NULL,
-  "shop_id" int8,
+  "order_id" int8,
   "consumer_id" int8,
-  "currency_id" int4,
-  "value" numeric(28,5) DEFAULT 0 NOT NULL,
-  "description" varchar(1000) COLLATE "default" NOT NULL,
+  "transaction_state" varchar(50) COLLATE "default" DEFAULT 'UNDEFINED',
+  "description" varchar(1000) COLLATE "default",
   "active" bool DEFAULT true NOT NULL,
   "created_date" timestamp(6) DEFAULT now() NOT NULL,
   "modified_date" timestamp(6) DEFAULT now() NOT NULL
@@ -516,10 +523,12 @@ WITH (OIDS=FALSE);
 -- Primary Key structure
 ALTER TABLE "data"."transaction" ADD PRIMARY KEY ("id");
 
+-- Uniques structure
+ALTER TABLE "data"."transaction" ADD UNIQUE ("order_id");
+
 -- Foreign Key structure
-ALTER TABLE "data"."transaction" ADD FOREIGN KEY ("shop_id") REFERENCES "data"."shop" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE "data"."transaction" ADD FOREIGN KEY ("order_id") REFERENCES "data"."order" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
 ALTER TABLE "data"."transaction" ADD FOREIGN KEY ("consumer_id") REFERENCES "data"."consumer" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
-ALTER TABLE "data"."transaction" ADD FOREIGN KEY ("currency_id") REFERENCES "data"."currency" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 
 
