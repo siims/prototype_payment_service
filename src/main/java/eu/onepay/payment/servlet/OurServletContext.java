@@ -22,8 +22,6 @@ public class OurServletContext implements ServletContextListener {
 
     @Override
     public void contextDestroyed(ServletContextEvent arg0) {
-        // TODO Auto-generated method stub
-
     }
 
     @Override
@@ -44,13 +42,13 @@ public class OurServletContext implements ServletContextListener {
     private void setMerchantCredentials(ServletContext serCtx) {
         // TODO: connect with some sort of database - document based perhaps
         Map<Long, MerchantCredentials> merchantCrede = new HashMap<>();
-        
+
         MerchantCredentials merchCrede = new MerchantCredentials();
         merchCrede.setMerchantId(1234L);
         merchantCrede.put(merchCrede.getMerchantId(), merchCrede);
-        
+
         serCtx.setAttribute(MerchantCredentials.CONTEXT_KEY, merchantCrede);
-        
+
     }
 
     private void setDefaultPaymentCedentials(ServletContext serCtx) {

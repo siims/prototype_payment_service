@@ -26,7 +26,6 @@ public class DummyObject {
             @Override
             public void initAndVerify(PaymentCredential payCrede, OrderCredentials orderCrede, MerchantCredentials merchCrede) {
                 this.payCrede = payCrede;
-                // TODO Auto-generated method stub
                 this.orderCrede = orderCrede;
                 this.merchCrede = merchCrede;
 
@@ -47,7 +46,7 @@ public class DummyObject {
 
                 Map<String, String> inputNameValue = new HashMap<>();
                 inputNameValue.put("VK_AMOUNT", Double.toString(orderCrede.getAmount()));
-                // kliendile tuleb VK_SND_ID eraldi võtta kui tal on custom lahenduse
+                // kliendile tuleb VK_SND_ID eraldi võtta kui tal on custom lahendus
                 inputNameValue.put("VK_SND_ID", "uid100010");
                 inputNameValue.put("VK_SERVICE", "1012");
                 inputNameValue.put("VK_VERSION", "008");

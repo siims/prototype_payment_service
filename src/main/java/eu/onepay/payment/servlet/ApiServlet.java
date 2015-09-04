@@ -37,7 +37,7 @@ public class ApiServlet extends HttpServlet {
         response.getWriter().write(returnForm.toString());
 
     }
-    
+
     private PaymentRequest getRequestAsObject(HttpServletRequest request) throws IOException{
         String json = request.getReader().lines().collect(Collectors.joining());
         Gson gson = new Gson();
