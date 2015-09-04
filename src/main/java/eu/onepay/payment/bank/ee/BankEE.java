@@ -91,11 +91,9 @@ public class BankEE {
 
         String ksPassword = "123456";
 
-        String ksLocation = keyLocation;
-
         KeyStore ks = KeyStore.getInstance("JKS");
         char[] passPhraseKs = ksPassword.toCharArray();
-        File certificateFile = new File(ksLocation);
+        File certificateFile = new File(keyLocation);
 
         ks.load(new FileInputStream(certificateFile), passPhraseKs);
 

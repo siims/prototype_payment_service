@@ -10,6 +10,7 @@ Estonian pank payments (and some Finlands)
 -go back to 'makselahendused' view copy "Kasutajatunnus"
 -go to 'OurServletContext.java' class and replace the value of "sendersId" with your kasutajatunnus
 
+keyStore password is: 123456
 Now you need to add your key to the truststore.ks.
 -For that navigate to resource folder.
 -take the keys that where generated for you by Pangalink-net.
