@@ -26,10 +26,7 @@ public class ApiServlet extends HttpServlet {
 
         servCtx = request.getServletContext();
 
-        String json = request.getReader().lines().collect(Collectors.joining());
-
-        Gson gson = new Gson();
-        PaymentRequest payRequest = gson.fromJson(json, PaymentRequest.class);
+        PaymentRequest payRequest = getRequestAsObject(request);
 
         OrderCredentials orderCrede = getOrderCredentials(payRequest);
         MerchantCredentials merchCrede = getMerchantCredentials(payRequest.merchantId);
@@ -39,6 +36,12 @@ public class ApiServlet extends HttpServlet {
 
         response.getWriter().write(returnForm.toString());
 
+    }
+    
+    private PaymentRequest getRequestAsObject(HttpServletRequest request) throws IOException{
+        String json = request.getReader().lines().collect(Collectors.joining());
+        Gson gson = new Gson();
+        return gson.fromJson(json, PaymentRequest.class);
     }
 
     private MerchantCredentials getMerchantCredentials(Long merchantId) {
