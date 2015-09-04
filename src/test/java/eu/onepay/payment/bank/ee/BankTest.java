@@ -5,7 +5,7 @@
  * Created : 09/02/2015 04:48:32
  */
 
-package eu.pank.payment.bank.ee;
+package eu.onepay.payment.bank.ee;
 
 import static org.junit.Assert.*;
 
@@ -19,6 +19,8 @@ import java.security.cert.CertificateException;
 
 import org.junit.Test;
 
+import eu.onepay.payment.bank.ee.BankEE;
+
 public class BankTest {
 
     private BankEE bank = new BankEE();
@@ -26,7 +28,7 @@ public class BankTest {
 
     /**
      * 
-     * @see eu.pank.payment.bank.ee.BankEE#getSignature(boolean,String)
+     * @see eu.onepay.payment.bank.ee.BankEE#getSignature(boolean,String)
      */
     @Test
     public void getSignature() {
@@ -43,7 +45,7 @@ public class BankTest {
 
     /**
      *
-     * @see eu.pank.payment.bank.ee.BankEE#generateMac(String[],String)
+     * @see eu.onepay.payment.bank.ee.BankEE#generateMac(String[],String)
      */
     @Test
     public void generateMac() {

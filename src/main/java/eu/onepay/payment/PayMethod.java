@@ -1,6 +1,6 @@
-package eu.pank.payment;
+package eu.onepay.payment;
 
-import eu.pank.payment.html.Form;
+import eu.onepay.payment.html.Form;
 
 public interface PayMethod {
     public static final String CONTEXT_KEY = "paymentMethods";

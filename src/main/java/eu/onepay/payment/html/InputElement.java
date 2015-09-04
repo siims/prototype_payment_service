@@ -1,4 +1,4 @@
-package eu.pank.payment.html;
+package eu.onepay.payment.html;
 
 public class InputElement {
     

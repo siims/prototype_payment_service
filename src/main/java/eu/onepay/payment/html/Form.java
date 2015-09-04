@@ -1,4 +1,4 @@
-package eu.pank.payment.html;
+package eu.onepay.payment.html;
 
 import java.util.ArrayList;
 import java.util.List;

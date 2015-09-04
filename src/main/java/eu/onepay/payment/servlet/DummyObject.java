@@ -1,4 +1,4 @@
-package eu.pank.payment.servlet;
+package eu.onepay.payment.servlet;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -6,12 +6,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.TimeZone;
 
-import eu.pank.payment.MerchantCredentials;
-import eu.pank.payment.OrderCredentials;
-import eu.pank.payment.PayMethod;
-import eu.pank.payment.PaymentCredential;
-import eu.pank.payment.html.Form;
-import eu.pank.payment.html.InputElement;
+import eu.onepay.payment.MerchantCredentials;
+import eu.onepay.payment.OrderCredentials;
+import eu.onepay.payment.PayMethod;
+import eu.onepay.payment.PaymentCredential;
+import eu.onepay.payment.html.Form;
+import eu.onepay.payment.html.InputElement;
 
 public class DummyObject {
 

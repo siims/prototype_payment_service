@@ -1,4 +1,4 @@
-package eu.pank.payment.servlet;
+package eu.onepay.payment.servlet;
 
 import java.io.IOException;
 import java.util.Map;
@@ -9,11 +9,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import eu.pank.payment.MerchantCredentials;
-import eu.pank.payment.OrderCredentials;
-import eu.pank.payment.PayMethod;
-import eu.pank.payment.PaymentCredential;
-import eu.pank.payment.html.Form;
+import eu.onepay.payment.MerchantCredentials;
+import eu.onepay.payment.OrderCredentials;
+import eu.onepay.payment.PayMethod;
+import eu.onepay.payment.PaymentCredential;
+import eu.onepay.payment.html.Form;
 
 public class ApiServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;

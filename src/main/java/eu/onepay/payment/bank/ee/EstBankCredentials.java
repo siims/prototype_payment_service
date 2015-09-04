@@ -1,4 +1,4 @@
-package eu.pank.payment.bank.ee;
+package eu.onepay.payment.bank.ee;
 
 public class EstBankCredentials {
 

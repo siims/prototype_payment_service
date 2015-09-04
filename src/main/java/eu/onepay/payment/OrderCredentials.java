@@ -1,4 +1,4 @@
-package eu.pank.payment;
+package eu.onepay.payment;
 
 /**
  * Things that usually go on order for e-shops are described here.

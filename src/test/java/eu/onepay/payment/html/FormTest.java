@@ -5,12 +5,13 @@
  * Created : 09/03/2015 01:41:09
  */
 
-package eu.pank.payment.html;
+package eu.onepay.payment.html;
 
 import org.junit.*;
 
 import static org.junit.Assert.*;
-import eu.pank.payment.html.Form;
+import eu.onepay.payment.html.Form;
+import eu.onepay.payment.html.InputElement;
 
 import java.lang.String;
 
@@ -22,7 +23,7 @@ public class FormTest {
 
     /**
      *
-     * @see eu.pank.payment.html.Form#toString()
+     * @see eu.onepay.payment.html.Form#toString()
      */
     @Test
     public void testToString() {

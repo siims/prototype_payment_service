@@ -1,4 +1,4 @@
-package eu.pank.payment;
+package eu.onepay.payment;
 
 import java.util.HashMap;
 import java.util.Map;

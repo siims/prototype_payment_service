@@ -1,4 +1,4 @@
-package eu.pank.payment.servlet;
+package eu.onepay.payment.servlet;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,8 +10,8 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
 
-import eu.pank.payment.PayMethod;
-import eu.pank.payment.PaymentCredential;
+import eu.onepay.payment.PayMethod;
+import eu.onepay.payment.PaymentCredential;
 @WebListener
 public class OurServletContext implements ServletContextListener {
 
