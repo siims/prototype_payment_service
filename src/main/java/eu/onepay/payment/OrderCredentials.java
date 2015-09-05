@@ -14,6 +14,7 @@ public class OrderCredentials {
     private Double amount = 0.0;
     private String description = "";
     private Long referenceNo = 0L;
+    private Long transactionId = 0L;
 
     public String getId() {
         return id;
@@ -45,6 +46,14 @@ public class OrderCredentials {
 
     public void setReferenceNo(Long referenceNo) {
         this.referenceNo = referenceNo;
+    }
+
+    public Long getTransactionId() {
+        return transactionId;
+    }
+
+    public void setTransactionId(Long transactionId) {
+        this.transactionId = transactionId;
     }
 
 }
