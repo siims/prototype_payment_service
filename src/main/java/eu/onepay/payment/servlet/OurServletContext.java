@@ -127,9 +127,16 @@ public class OurServletContext implements ServletContextListener {
         @SuppressWarnings("rawtypes")
         Map<Long, Class> payMethods = new HashMap<Long, Class>();
         // TODO: connect with some sort of database - document based perhaps
-        // Get
-        long paymentId = 23L;
-        payMethods.put(paymentId, VKBankMethod.class);
+        // Get payment ID and connect it with required class
+        try {
+            long paymentId = 23L;
+            Class<?> act = Class.forName("eu.onepay.payment.bank.ee.VKBankMethod");
+            payMethods.put(paymentId, act);
+
+        } catch (ClassNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
         serCtx.setAttribute(PayMethod.CONTEXT_KEY, payMethods);
 
     }
