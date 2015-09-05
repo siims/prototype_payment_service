@@ -1,16 +1,15 @@
 package eu.onepay.payment;
 
-import eu.onepay.payment.html.Form;
 
 public abstract class PayMethod {
     public static final String CONTEXT_KEY = "paymentMethods";
     private Long id;
-    
-    
-    public PayMethod(Long id){
+    protected boolean valid;
+
+    public PayMethod ( Long id ){
         this.id = id;
     }
-    
+
     /**
      * Makse sure that all payment details are added as should.
      * TODO: exception handling think through. One way is to throw exception
@@ -20,14 +19,19 @@ public abstract class PayMethod {
      * @param orderCrede
      * @param merchCrede
      */
-    public abstract void initAndVerify(PaymentCredential payCrede, OrderCredentials orderCrede, MerchantCredentials merchCrede);
+    public abstract void initAndVerify(PaymentCredential payCrede, OrderCredentials orderCrede,
+            MerchantCredentials merchCrede);
 
-    /**
-     * 
-     * @return paymentMethod in the form of Form Class.
-     */
-    public abstract Form asForm();
+    public long getId(){
+        return id;
+    }
 
-    public abstract long getId();
+    public boolean notValid() {
+        return !valid;
+    }
+
+    public boolean isValid() {
+        return valid;
+    }
 
 }

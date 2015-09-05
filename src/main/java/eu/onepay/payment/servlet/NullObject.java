@@ -19,10 +19,6 @@ public class NullObject {
                 return 0;
             }
 
-            @Override
-            public Form asForm() {
-                return null;
-            }
         };
     }
 }

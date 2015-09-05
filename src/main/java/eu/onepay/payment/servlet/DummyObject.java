@@ -36,7 +36,6 @@ public class DummyObject {
                 return 23L;
             }
 
-            @Override
             public Form asForm() {
 
                 Form form = new Form();

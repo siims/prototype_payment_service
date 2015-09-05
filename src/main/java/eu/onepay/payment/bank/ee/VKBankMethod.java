@@ -2,17 +2,13 @@ package eu.onepay.payment.bank.ee;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.TimeZone;
 
 import org.apache.commons.lang3.StringUtils;
 
 import eu.onepay.payment.MerchantCredentials;
 import eu.onepay.payment.OrderCredentials;
-import eu.onepay.payment.PayMethod;
 import eu.onepay.payment.PaymentCredential;
-import eu.onepay.payment.html.Form;
 
 public class VKBankMethod extends BankEE {
 
@@ -20,7 +16,6 @@ public class VKBankMethod extends BankEE {
     private OrderCredentials orderCrede;
     private MerchantCredentials merchCrede;
     private long id;
-    private boolean valid;
 
     public VKBankMethod ( Long id ){
         super(id);
@@ -34,7 +29,7 @@ public class VKBankMethod extends BankEE {
         init(payCrede, orderCrede, merchCrede);
     }
 
-    private void verify(PaymentCredential payCrede2, OrderCredentials orderCrede2, MerchantCredentials merchCrede2) {
+    private void verify(PaymentCredential payCrede, OrderCredentials orderCrede, MerchantCredentials merchCrede) {
         // TODO: maybe should make deeper verification, check if all fields are
         // here that are needed
         if (payCrede instanceof VKBankPayCredentials) {
@@ -57,32 +52,45 @@ public class VKBankMethod extends BankEE {
         this.id = payCrede.getPaymentId();
     }
 
-    @Override
-    public Form asForm() {
-        Form form = new Form();
-        form.setMethod("POST");
-        form.setAction("http://localhost:8081/banklink/seb-common");
 
-        Map<String, String> inputNameValue = new HashMap<>();
-        inputNameValue.put("VK_AMOUNT", Double.toString(orderCrede.getAmount()));
-        inputNameValue.put("VK_STAMP", getVk_stamp());
-        inputNameValue.put("VK_DATETIME", getCurrentDate());
-        inputNameValue.put("VK_REF", Long.toString(orderCrede.getReferenceNo()));
-        inputNameValue.put("VK_MSG", getDescription());
-        inputNameValue.put("VK_MAC", calcMac());
-        inputNameValue.put("VK_SERVICE", payCrede.getService());
-        inputNameValue.put("VK_VERSION", payCrede.getVersion());
-        inputNameValue.put("VK_CHARSET", payCrede.getEncoding());
-        inputNameValue.put("VK_CURR", payCrede.getCurrency());
-        // kliendile tuleb VK_SND_ID eraldi võtta kui tal on custom
-        // lahenduse("uid100010")
-        inputNameValue.put("VK_SND_ID", payCrede.getSendersId());
-        inputNameValue.put("VK_CANCEL", payCrede.getCancelUrl());
-        inputNameValue.put("VK_RETURN", payCrede.getReturnUrl());
+    public String getVK_RETURN() {
+        return payCrede.getReturnUrl();
+    }
 
-        inputNameValue.forEach((name, value) -> form.addInputElement(name, value));
+    public String getVK_CANCEL() {
+        return payCrede.getCancelUrl();
+    }
 
-        return form;
+    public String getVK_SND_ID() {
+        return payCrede.getSendersId();
+    }
+
+    public String getVK_CURR() {
+        return payCrede.getCurrency();
+    }
+
+    public String getVK_CHARSET() {
+        return payCrede.getEncoding();
+    }
+
+    public String getVK_VERSION() {
+        return payCrede.getVersion();
+    }
+
+    public String getVK_SERVICE() {
+        return payCrede.getService();
+    }
+
+    public String getVK_MAC() {
+        return calcMac();
+    }
+
+    public String getVK_REF() {
+        return Long.toString(orderCrede.getReferenceNo());
+    }
+
+    public String getVK_AMOUNT() {
+        return Double.toString(orderCrede.getAmount());
     }
 
     /**
@@ -90,7 +98,7 @@ public class VKBankMethod extends BankEE {
      * 
      * @return String with max length of 95 characters
      */
-    private String getDescription() {
+    public String getVK_MSG() {
         String retString = null;
 
         retString = merchCrede.getMerchantId() + ":" + merchCrede.getName() + ": " + orderCrede.getId()
@@ -120,17 +128,17 @@ public class VKBankMethod extends BankEE {
 
         String mac = getMac(new String[] {
                 // @formatter:off
-                payCrede.getService(), 
-                payCrede.getVersion(), 
-                payCrede.getSendersId(),
-                getVk_stamp(),
-                Double.toString(orderCrede.getAmount()),
-                payCrede.getCurrency(),
-                Long.toString(orderCrede.getReferenceNo()),
-                getDescription(),
-                payCrede.getReturnUrl(),
-                payCrede.getCancelUrl(),
-                getCurrentDate(),
+                getVK_SERVICE(), 
+                getVK_VERSION(), 
+                getVK_SND_ID(),
+                getVK_STAMP(),
+                getVK_AMOUNT(),
+                getVK_CURR(),
+                getVK_REF(),
+                getVK_MSG(),
+                getVK_RETURN(),
+                getVK_CANCEL(),
+                getVK_DATETIME(),
                 }, payCrede.getPrivetKeyAlias(), true);
         
                 // @formatter:on
@@ -138,9 +146,13 @@ public class VKBankMethod extends BankEE {
         return mac;
     }
 
-    private String getVk_stamp() {
+    public String getVK_STAMP() {
         // TODO testida korduv päring sama stampiga
         return orderCrede.getId();
+    }
+
+    public String getVK_DATETIME() {
+        return getCurrentDate();
     }
 
 }
