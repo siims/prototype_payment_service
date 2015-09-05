@@ -113,9 +113,9 @@ public class ApiServlet extends HttpServlet {
 
         try {
             @SuppressWarnings("unchecked")
-            Map<String, Map<String, PaymentCredential>> merchantPayMethods = (Map<String, Map<String, PaymentCredential>>) servCtx
+            Map<Long, Map<Long, PaymentCredential>> merchantPayMethods = (Map<Long, Map<Long, PaymentCredential>>) servCtx
                     .getAttribute(PaymentCredential.CUSTOM_CREDE_KEY);
-            Map<String, PaymentCredential> payCredentials = merchantPayMethods.get(merchantId);
+            Map<Long, PaymentCredential> payCredentials = merchantPayMethods.get(merchantId);
             return payCredentials.get(paymentId);
         } catch (NullPointerException e) {
             return null;
