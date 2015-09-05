@@ -18,7 +18,13 @@ import java.security.cert.CertificateException;
 
 import org.apache.commons.codec.binary.Base64;
 
-public class BankEE {
+import eu.onepay.payment.PayMethod;
+
+public abstract class BankEE extends PayMethod{
+
+    public BankEE ( Long id ){
+        super(id);
+    }
 
     public static String ENCODING = "UTF-8";
 

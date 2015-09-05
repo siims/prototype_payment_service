@@ -17,7 +17,7 @@ public class DummyObject {
 
     public static PayMethod payMethod() {
 
-        return new PayMethod() {
+        return new PayMethod(0L) {
 
             private PaymentCredential payCrede;
             private OrderCredentials orderCrede;

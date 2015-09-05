@@ -2,8 +2,14 @@ package eu.onepay.payment;
 
 import eu.onepay.payment.html.Form;
 
-public interface PayMethod {
+public abstract class PayMethod {
     public static final String CONTEXT_KEY = "paymentMethods";
+    private Long id;
+    
+    
+    public PayMethod(Long id){
+        this.id = id;
+    }
     
     /**
      * Makse sure that all payment details are added as should.
@@ -14,14 +20,14 @@ public interface PayMethod {
      * @param orderCrede
      * @param merchCrede
      */
-    public void initAndVerify(PaymentCredential payCrede, OrderCredentials orderCrede, MerchantCredentials merchCrede);
+    public abstract void initAndVerify(PaymentCredential payCrede, OrderCredentials orderCrede, MerchantCredentials merchCrede);
 
     /**
      * 
      * @return paymentMethod in the form of Form Class.
      */
-    public Form asForm();
+    public abstract Form asForm();
 
-    public long getId();
+    public abstract long getId();
 
 }

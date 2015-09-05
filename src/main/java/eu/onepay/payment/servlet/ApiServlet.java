@@ -1,6 +1,8 @@
 package eu.onepay.payment.servlet;
 
 import java.io.IOException;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -35,6 +37,7 @@ public class ApiServlet extends HttpServlet {
         Form returnForm = getReturnForm(payCrede, orderCrede, merchCrede);
 
         response.getWriter().write(returnForm.toString());
+        
 
     }
 
@@ -88,11 +91,22 @@ public class ApiServlet extends HttpServlet {
         return retForm;
     }
 
+    @SuppressWarnings("rawtypes")
     private PayMethod getDefaultPaymentMethod(Long paymentId) {
         @SuppressWarnings("unchecked")
-        Map<String, PayMethod> payMethods = (Map<String, PayMethod>) servCtx.getAttribute(PayMethod.CONTEXT_KEY);
-
-        return payMethods.get(paymentId);
+        Map<String, Class> payMethods = (Map<String, Class>) servCtx.getAttribute(PayMethod.CONTEXT_KEY);
+        PayMethod payMethod = NullObject.payMethod(); 
+        Class payMethodClass = payMethods.get(paymentId);
+        
+        try {
+            @SuppressWarnings("unchecked")
+            Constructor<? extends PayMethod> constructor = payMethodClass.getConstructor(Long.class);
+            payMethod = constructor.newInstance(paymentId);
+            return payMethod;
+        } catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+            e.printStackTrace();
+        }
+        return payMethod;
     }
 
     private PaymentCredential getCustomPaymentCredentials(Long merchantId, Long paymentId) {

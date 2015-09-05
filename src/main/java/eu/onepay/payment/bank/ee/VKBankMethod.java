@@ -14,7 +14,7 @@ import eu.onepay.payment.PayMethod;
 import eu.onepay.payment.PaymentCredential;
 import eu.onepay.payment.html.Form;
 
-public class VKBankMethod extends BankEE implements PayMethod {
+public class VKBankMethod extends BankEE {
 
     private VKBankPayCredentials payCrede;
     private OrderCredentials orderCrede;
@@ -23,7 +23,7 @@ public class VKBankMethod extends BankEE implements PayMethod {
     private boolean valid;
 
     public VKBankMethod ( Long id ){
-        this.id = id;
+        super(id);
     }
 
     @Override

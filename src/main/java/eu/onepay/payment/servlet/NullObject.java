@@ -8,7 +8,7 @@ import eu.onepay.payment.html.Form;
 
 public class NullObject {
     public static PayMethod payMethod() {
-        return new PayMethod() {
+        return new PayMethod(0L) {
 
             @Override
             public void initAndVerify(PaymentCredential payCrede, OrderCredentials orderCrede, MerchantCredentials merchCrede) {

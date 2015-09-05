@@ -52,18 +52,25 @@ public class OurServletContext implements ServletContextListener {
     }
 
     private void setDefaultPaymentCedentials(ServletContext serCtx) {
-        // TODO: connect with some sort of database - document based perhaps
-        // SOLR for example
         Map<Long, PaymentCredential> payCredential = new HashMap<Long, PaymentCredential>();
+        PaymentCredential payCrede;
+        // TODO: connect with some sort of database - document based perhaps
+        // SOLR for example.
+        // Siin pannakse kokku siis PaymentCredential'id mida meie defaultis anname.
+        // Võimalik, et tuleks ka ülejäänud parameetrid lisada siin, payment construktorisse.
+        // Trikk on siin, erinevad payment meetodid omavad erinevaid paymentCredentialeid.
+        // Kuidagi neid tuleks panna eristama teineteisest.
+        // Näiteks eesti pangad kasutavad kõik VKBankPayCredentials'it. Teised makseviisid ka muid.
+        
+        
+        // sendersID = panga poolt meie ettevõttele antud ID
         String sendersId = "uid100010";
         String returnUrl = "http://localhost:8080/pankpayment/";
-        String cancelUrl = returnUrl;
+        String cancelUrl = "http://localhost:8080/pankpayment/";
+        // privateKeyAlias keyfailis olevat võtme alias
         String privateKeyAlias = "1";
 
-        VKBankPayCredentials payCrede = new VKBankPayCredentials(23L, sendersId, returnUrl, cancelUrl, privateKeyAlias );
-        payCredential.put(payCrede.getPaymentId(), payCrede);
-
-        payCrede = new VKBankPayCredentials(24L, sendersId, returnUrl, cancelUrl, privateKeyAlias);
+        payCrede = new VKBankPayCredentials(23L, sendersId, returnUrl, cancelUrl, privateKeyAlias );
         payCredential.put(payCrede.getPaymentId(), payCrede);
 
         serCtx.setAttribute(PaymentCredential.CREDE_KEY, payCredential);
@@ -76,10 +83,11 @@ public class OurServletContext implements ServletContextListener {
      * @param serCtx
      */
     private void setCustomPaymentCredential(ServletContext serCtx) {
-        // TODO: connect with some sort of database - document based perhaps
+        
         // <merchantID <paymentId, PaymentCredential>>
         Map<String, Map<Long, PaymentCredential>> merchantPayCredentials = new HashMap<String, Map<Long, PaymentCredential>>();
-
+        // TODO: connect with some sort of database - document based perhaps
+        // get all merchant ID's in a list. And connect with their paymentCredentials.
         List<String> merchants = new ArrayList<>();
         merchants.add("Apollo");
         // TODO: LookUp all merchants who have custom paymentCredentials.
@@ -99,7 +107,7 @@ public class OurServletContext implements ServletContextListener {
     private Map<Long, PaymentCredential> getPayCredentials(String merchant) {
 
         // TODO: connect with some sort of database - document based perhaps
-        // SOLR for example
+        // SOLR for example. 
         Map<Long, PaymentCredential> payCredential = new HashMap<Long, PaymentCredential>();
         String sendersId = "uid100010";
         String returnUrl = "http://localhost:8080/pankpayment/";
@@ -116,12 +124,12 @@ public class OurServletContext implements ServletContextListener {
     }
 
     private void setDefaultPaymentMethods(ServletContext serCtx) {
+        @SuppressWarnings("rawtypes")
+        Map<Long, Class> payMethods = new HashMap<Long, Class>();
         // TODO: connect with some sort of database - document based perhaps
-        Map<Long, PayMethod> payMethods = new HashMap<Long, PayMethod>();
-
-        PayMethod payMethod = new VKBankMethod(23L);
-        payMethods.put(payMethod.getId(), payMethod);
-
+        // Get
+        long paymentId = 23L;
+        payMethods.put(paymentId, VKBankMethod.class);
         serCtx.setAttribute(PayMethod.CONTEXT_KEY, payMethods);
 
     }
