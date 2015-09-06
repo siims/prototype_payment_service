@@ -1,6 +1,7 @@
 package eu.onepay.payment.servlet;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.stream.Collectors;
 
 import javax.servlet.ServletContext;
@@ -11,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
 
+import eu.onepay.payment.OurTransaction;
 import eu.onepay.payment.PayMethod;
 import eu.onepay.payment.PaymentAction;
 import eu.onepay.payment.html.FormFactory;
@@ -29,7 +31,9 @@ public class ApiServlet extends HttpServlet {
         
         response.getWriter().write(FormFactory.asForm(method).toString());
         
-        // TODO: Add job to Some Atomic class or job queue
+        OurTransaction transaction = method.getTransaction();
+        transaction.setTimeSentOut(new Date());
+        TransactionChecker.addToTransactions(transaction);
     }
     
     

@@ -11,6 +11,7 @@ import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
 
 import eu.onepay.payment.MerchantCredentials;
+import eu.onepay.payment.OurTransaction;
 import eu.onepay.payment.PayMethod;
 import eu.onepay.payment.PaymentCredential;
 import eu.onepay.payment.bank.ee.BankEE;
@@ -33,9 +34,19 @@ public class OurServletContext implements ServletContextListener {
         setMerchantCredentials(serCtx);
 
         setCustomPaymentCredential(serCtx);
+        
+        setTransActionsQueue(serCtx);
 
         String keyLocation = "/WEB-INF/classes/truststore.ks";
         BankEE.keyLocation = serCtx.getRealPath(keyLocation).toString();
+    }
+
+    private void setTransActionsQueue(ServletContext serCtx) {
+        
+        
+        
+        
+        
     }
 
     private void setMerchantCredentials(ServletContext serCtx) {

@@ -11,6 +11,7 @@ public class Form {
     private String INPUT_NAME = "%NAME%";
     private String INPUT_VALUE = "%VALUE%";
     private String INPUT_STRING = "<input name=\"" + INPUT_NAME + "\" value=\"" + INPUT_VALUE + "\">";
+    private String LINE_BREAK = "<br>";
 
     @Override
     public String toString() {
@@ -24,6 +25,7 @@ public class Form {
             inputString = inputString.replace(INPUT_VALUE, input.getValue());
 
             formAsString.append(inputString);
+            formAsString.append(LINE_BREAK);
         }
         formAsString.append("</form>");
 

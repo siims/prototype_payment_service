@@ -8,6 +8,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import eu.onepay.payment.MerchantCredentials;
 import eu.onepay.payment.OrderCredentials;
+import eu.onepay.payment.OurTransaction;
 import eu.onepay.payment.PaymentCredential;
 
 public class VKBankMethod extends BankEE {
@@ -16,9 +17,11 @@ public class VKBankMethod extends BankEE {
     private OrderCredentials orderCrede;
     private MerchantCredentials merchCrede;
     private long id;
+    private OurTransaction ourTransaction;
 
     public VKBankMethod ( Long id ){
         super(id);
+        
     }
 
     @Override
@@ -148,11 +151,17 @@ public class VKBankMethod extends BankEE {
 
     public String getVK_STAMP() {
         // TODO testida korduv päring sama stampiga
-        return Long.toString(getTransactionId());
+        return Long.toString(getTransaction().getId());
     }
 
     public String getVK_DATETIME() {
         return getCurrentDate();
+    }
+    
+    @Override
+    public OurTransaction getTransaction() {
+        ourTransaction.setTimeToWait(300_000L);
+        return ourTransaction;
     }
 
 }

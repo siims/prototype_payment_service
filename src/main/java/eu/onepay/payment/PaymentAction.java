@@ -20,8 +20,8 @@ public class PaymentAction {
         PaymentAction paymentAction = new PaymentAction(payRequest, servCtx);
         PayMethod payMethod = paymentAction.getPayMethod();
         // TODO: Save the payMethod to database
-        Long transActionId = 0L;// = Database.saveTransaction(payMethod);
-        payMethod.setTransactionId(transActionId);
+        OurTransaction transaction = new OurTransaction();// = Database.saveAsTransaction(payMethod);
+        payMethod.setTransaction(transaction);
         
         return payMethod;
     }
