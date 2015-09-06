@@ -58,7 +58,9 @@ public class TransactionChecker {
                         // check if the transaction is still in 'paying' state
                         boolean isPaying = true;
                         if (isPaying) { // Set transaction as LeftUnpaid in DB
-
+                            
+                            // if all good poll form queue
+                            queue.poll();
                         } else {
                             queue.poll();
                         }
