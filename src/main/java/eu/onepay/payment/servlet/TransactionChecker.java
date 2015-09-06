@@ -2,6 +2,7 @@ package eu.onepay.payment.servlet;
 
 import java.util.Date;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
 import eu.onepay.payment.OurTransaction;
@@ -15,7 +16,7 @@ public class TransactionChecker {
     private TransactionChecker ( ){
     }
 
-    private static ConcurrentLinkedQueue<OurTransaction> queue = new ConcurrentLinkedQueue<OurTransaction>();
+    private static LinkedBlockingQueue<OurTransaction> queue = new LinkedBlockingQueue <OurTransaction>();
 
     public static void addToTransactions(OurTransaction transaction) {
 
@@ -35,7 +36,7 @@ public class TransactionChecker {
     private class TransactionCheckerRunner implements Runnable {
 
         @Override
-        public void run() {
+        public synchronized void run() {
             try {
                 while (queue.isEmpty() == false) {
 
@@ -49,6 +50,7 @@ public class TransactionChecker {
 
                     if (minutes < 6) {
                         try {
+
                             wait(360_000);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
