@@ -1,0 +1,10 @@
+TRUNCATE TABLE data.currency CASCADE;
+TRUNCATE TABLE data.contact_type CASCADE;
+TRUNCATE TABLE data.country CASCADE;
+TRUNCATE TABLE data.fin_service_type CASCADE;
+TRUNCATE TABLE data.fee_type CASCADE;
+ALTER SEQUENCE data.currency_id_seq RESTART WITH 1;
+ALTER SEQUENCE data.contact_type_id_seq RESTART WITH 1;
+ALTER SEQUENCE data.country_id_seq RESTART WITH 1;
+ALTER SEQUENCE data.fin_service_type_id_seq RESTART WITH 1;
+ALTER SEQUENCE data.fee_type_id_seq RESTART WITH 1;
