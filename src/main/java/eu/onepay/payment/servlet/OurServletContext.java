@@ -14,7 +14,6 @@ import eu.onepay.payment.MerchantCredentials;
 import eu.onepay.payment.PayMethod;
 import eu.onepay.payment.PaymentCredential;
 import eu.onepay.payment.bank.ee.BankEE;
-import eu.onepay.payment.bank.ee.VKBankMethod;
 import eu.onepay.payment.bank.ee.VKBankPayCredentials;
 
 @WebListener

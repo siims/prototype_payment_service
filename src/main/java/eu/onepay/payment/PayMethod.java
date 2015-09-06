@@ -5,6 +5,7 @@ public abstract class PayMethod {
     public static final String CONTEXT_KEY = "paymentMethods";
     private Long id;
     protected boolean valid;
+    private Long transactionId = 0L;
 
     public PayMethod ( Long id ){
         this.id = id;
@@ -32,6 +33,17 @@ public abstract class PayMethod {
 
     public boolean isValid() {
         return valid;
+    }
+
+    public void setTransactionId(Long transActionId) {
+        this.transactionId = transActionId;
+    }
+    /**
+     * Transaction ID form database.
+     * @return
+     */
+    public long getTransactionId() {
+        return transactionId;
     }
 
 }

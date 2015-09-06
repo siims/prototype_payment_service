@@ -19,6 +19,9 @@ public class PaymentAction {
     public static PayMethod makeTransaction(PaymentRequest payRequest, ServletContext servCtx) {
         PaymentAction paymentAction = new PaymentAction(payRequest, servCtx);
         PayMethod payMethod = paymentAction.getPayMethod();
+        // TODO: Save the payMethod to database
+        Long transActionId = 0L;// = Database.saveTransaction(payMethod);
+        payMethod.setTransactionId(transActionId);
         
         return payMethod;
     }

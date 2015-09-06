@@ -29,9 +29,6 @@ public class ApiServlet extends HttpServlet {
         
         response.getWriter().write(FormFactory.asForm(method).toString());
         
-        // TODO: Save the payMethod to database
-        // Database.saveTransaction(payMethod);
-        
         // TODO: Add job to Some Atomic class or job queue
     }
     

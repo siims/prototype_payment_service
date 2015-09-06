@@ -148,7 +148,7 @@ public class VKBankMethod extends BankEE {
 
     public String getVK_STAMP() {
         // TODO testida korduv päring sama stampiga
-        return orderCrede.getId();
+        return Long.toString(getTransactionId());
     }
 
     public String getVK_DATETIME() {
