@@ -255,8 +255,9 @@ CREATE SEQUENCE "data"."bank_account_id_seq"
 CREATE TABLE "data"."bank_account" (
   "id" int8 DEFAULT nextval('"data".bank_account_id_seq'::regclass) NOT NULL,
   "company_id" int8,
-  "account_namber" varchar(50) COLLATE "default" NOT NULL,
+  "account_number" varchar(50) COLLATE "default" NOT NULL,
   "currency_id" int4,
+  "fin_company_id" int8,
   "active" bool DEFAULT true NOT NULL,
   "created_date" timestamp(6) DEFAULT now() NOT NULL,
   "modified_date" timestamp(6) DEFAULT now() NOT NULL
@@ -267,12 +268,12 @@ WITH (OIDS=FALSE);
 ALTER TABLE "data"."bank_account" ADD PRIMARY KEY ("id");
 
 -- Uniques structure
-ALTER TABLE "data"."bank_account" ADD UNIQUE ("company_id", "account_namber", "currency_id");
+ALTER TABLE "data"."bank_account" ADD UNIQUE ("company_id", "account_number", "currency_id");
 
 -- Foreign Key structure
 ALTER TABLE "data"."bank_account" ADD FOREIGN KEY ("company_id") REFERENCES "data"."company" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
 ALTER TABLE "data"."bank_account" ADD FOREIGN KEY ("currency_id") REFERENCES "data"."currency" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
-
+ALTER TABLE "data"."bank_account" ADD FOREIGN KEY ("fin_company_id") REFERENCES "data"."fin_company" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 ----------------------------------------------------------------------
 ------------------------- crypt_key ----------------------------------
@@ -323,9 +324,9 @@ CREATE SEQUENCE "data"."payment_method_id_seq"
 CREATE TABLE "data"."payment_method" (
   "id" int8 DEFAULT nextval('"data".payment_method_id_seq'::regclass) NOT NULL,
   "fin_service_id" int8,
-  "merchant_id" int8,
+  "company_id" int8,
   "receiving_bank_account_id" int8,
-  "name" varchar(50) COLLATE "default" NOT NULL,
+  "name" varchar(50) COLLATE "default",
   "fin_company_service_key_id" int8,
   "company_key_id" int8,
   "contact_name_id" int4,
@@ -341,11 +342,11 @@ WITH (OIDS=FALSE);
 ALTER TABLE "data"."payment_method" ADD PRIMARY KEY ("id");
 
 -- Uniques structure
-ALTER TABLE "data"."payment_method" ADD UNIQUE ("fin_service_id", "merchant_id", "receiving_bank_account_id");
+ALTER TABLE "data"."payment_method" ADD UNIQUE ("fin_service_id", "company_id", "receiving_bank_account_id");
 
 -- Foreign Key structure
 ALTER TABLE "data"."payment_method" ADD FOREIGN KEY ("fin_service_id") REFERENCES "data"."fin_service" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
-ALTER TABLE "data"."payment_method" ADD FOREIGN KEY ("merchant_id") REFERENCES "data"."merchant" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE "data"."payment_method" ADD FOREIGN KEY ("company_id") REFERENCES "data"."company" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
 ALTER TABLE "data"."payment_method" ADD FOREIGN KEY ("receiving_bank_account_id") REFERENCES "data"."bank_account" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION; -- FIXME
 ALTER TABLE "data"."payment_method" ADD FOREIGN KEY ("fin_company_service_key_id") REFERENCES "data"."crypt_key" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
 ALTER TABLE "data"."payment_method" ADD FOREIGN KEY ("company_key_id") REFERENCES "data"."crypt_key" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
@@ -371,8 +372,8 @@ CREATE TABLE "data"."fee" (
   "id" int8 DEFAULT nextval('"data".fee_id_seq'::regclass) NOT NULL,
   "fin_service_id" int8,
   "fee_type_id" int4,
-  "value" varchar(50) COLLATE "default" NOT NULL,
-  "description" varchar(1000) COLLATE "default" NOT NULL,
+  "amount" numeric(28,5) DEFAULT 0 NOT NULL,
+  "description" varchar(1000) COLLATE "default",
   "valid_from_date" timestamp(6) DEFAULT now() NOT NULL,
   "valid_till_date" timestamp(6),
   "active" bool DEFAULT true NOT NULL,
@@ -469,6 +470,8 @@ ALTER TABLE "data"."account" ADD FOREIGN KEY ("currency_id") REFERENCES "data"."
 ------------------------- consumer -----------------------------------
 ----------------------------------------------------------------------
 
+ -- TODO: can we know fin_company_id?
+
 -- Sequence structure
 CREATE SEQUENCE "data"."consumer_id_seq"
   INCREMENT 1
@@ -482,7 +485,6 @@ CREATE TABLE "data"."consumer" (
   "id" int8 DEFAULT nextval('"data".consumer_id_seq'::regclass) NOT NULL,
   "name" varchar(1000) COLLATE "default",
   "account_number" varchar(50) COLLATE "default",
-  "fin_company_id" int8 NOT NULL,
   "active" bool DEFAULT true NOT NULL,
   "created_date" timestamp(6) DEFAULT now() NOT NULL,
   "modified_date" timestamp(6) DEFAULT now() NOT NULL
@@ -493,7 +495,7 @@ WITH (OIDS=FALSE);
 ALTER TABLE "data"."consumer" ADD PRIMARY KEY ("id");
 
 -- Uniques structure
-ALTER TABLE "data"."consumer" ADD UNIQUE ("name", "account_number", "fin_company_id");
+ALTER TABLE "data"."consumer" ADD UNIQUE ("name", "account_number");
 
 ----------------------------------------------------------------------
 ------------------------------- order --------------------------------
