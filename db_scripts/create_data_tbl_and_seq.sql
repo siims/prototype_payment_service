@@ -4,11 +4,13 @@
 -- drop sequence is important
 
 DROP TABLE IF EXISTS "data"."transaction";
+DROP SEQUENCE IF EXISTS "data"."transaction_id_seq";
 DROP TABLE IF EXISTS "data"."account";
 DROP SEQUENCE IF EXISTS "data"."account_id_seq";
 DROP TABLE IF EXISTS "data"."merchant_existing_payment_method";
 DROP SEQUENCE IF EXISTS "data"."merchant_existing_payment_method_id_seq";
 DROP TABLE IF EXISTS "data"."order";
+DROP SEQUENCE IF EXISTS "data"."order_id_seq";
 
 DROP TABLE IF EXISTS "data"."fee";
 DROP SEQUENCE IF EXISTS "data"."fee_id_seq";
@@ -497,10 +499,17 @@ ALTER TABLE "data"."consumer" ADD UNIQUE ("name", "account_number", "fin_company
 ------------------------------- order --------------------------------
 ----------------------------------------------------------------------
 
+-- Sequence structure
+CREATE SEQUENCE "data"."order_id_seq"
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 1
+  CACHE 1;
 
 -- Table structure
 CREATE TABLE "data"."order" (
-  "id" int8,
+  "id" int8 DEFAULT nextval('"data".order_id_seq'::regclass) NOT NULL,
   "merchant_id" int8,
   "merchants_order_name" varchar(1000) COLLATE "default" NOT NULL,
   "currency_id" int4,
@@ -528,8 +537,17 @@ ALTER TABLE "data"."order" ADD FOREIGN KEY ("currency_id") REFERENCES "data"."cu
 ------------------------- transaction --------------------------------
 ----------------------------------------------------------------------
 
+-- Sequence structure
+CREATE SEQUENCE "data"."transaction_id_seq"
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 1
+  CACHE 1;
+
 -- Table structure
 CREATE TABLE "data"."transaction" (
+  "id" int8 DEFAULT nextval('"data".transaction_id_seq'::regclass) NOT NULL,
   "order_id" int8,
   "consumer_id" int8,
   "transaction_state" varchar(50) COLLATE "default" DEFAULT 'UNDEFINED',
@@ -542,7 +560,7 @@ CREATE TABLE "data"."transaction" (
 WITH (OIDS=FALSE);
 
 -- Primary Key structure
-ALTER TABLE "data"."transaction" ADD PRIMARY KEY ("order_id");
+ALTER TABLE "data"."transaction" ADD PRIMARY KEY ("id");
 
 -- Foreign Key structure
 ALTER TABLE "data"."transaction" ADD FOREIGN KEY ("order_id") REFERENCES "data"."order" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
