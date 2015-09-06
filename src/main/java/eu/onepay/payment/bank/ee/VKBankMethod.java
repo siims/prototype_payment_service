@@ -17,7 +17,6 @@ public class VKBankMethod extends BankEE {
     private OrderCredentials orderCrede;
     private MerchantCredentials merchCrede;
     private long id;
-    private OurTransaction ourTransaction;
 
     public VKBankMethod ( Long id ){
         super(id);
@@ -160,8 +159,8 @@ public class VKBankMethod extends BankEE {
     
     @Override
     public OurTransaction getTransaction() {
-        ourTransaction.setTimeToWait(300_000L);
-        return ourTransaction;
+        super.getTransaction().setTimeToWait(300_000L);
+        return super.getTransaction();
     }
 
 }

@@ -9,13 +9,25 @@
 		<servlet-name>HelloWorld</servlet-name>
 		<servlet-class>eu.onepay.payment.servlet.ApiServlet</servlet-class>
 	</servlet>
+	<servlet>
+		<servlet-name>PaymentCallback</servlet-name>
+		<servlet-class>eu.onepay.payment.servlet.CallbackServlet</servlet-class>
+	</servlet>
+
+
 	<servlet-mapping>
 		<servlet-name>HelloWorld</servlet-name>
 		<url-pattern>/pay</url-pattern>
 	</servlet-mapping>
-	
+	<servlet-mapping>
+		<servlet-name>PaymentCallback</servlet-name>
+		<url-pattern>/callback</url-pattern>
+	</servlet-mapping>
+
+
+
 	<welcome-file-list>
-	<welcome-file>index.jsp</welcome-file>
+		<welcome-file>index.jsp</welcome-file>
 	</welcome-file-list>
 
 </web-app>
