@@ -3,11 +3,15 @@ package eu.onepay.payment;
 import java.util.HashMap;
 import java.util.Map;
 
+import lombok.Data;
+
 /**
  * This class will hold information about the merchant.
  * @author mihkel
  *
  */
+
+@Data
 public class MerchantCredentials {
 
     public static final String CONTEXT_KEY = "merchantCredentials";
@@ -18,22 +22,6 @@ public class MerchantCredentials {
     
     public boolean hasCustomSettingOnPayMethod(String paymentId) {
         return privatePayMethods.containsKey(paymentId);
-    }
-
-    public Long getMerchantId() {
-        return merchantId;
-    }
-
-    public void setMerchantId(Long merchantId) {
-        this.merchantId = merchantId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
 }
