@@ -73,31 +73,29 @@ INSERT INTO "data"."fin_service" (id, fin_company_id, fin_service_type_id, name,
   VALUES (2, 0, 1, 'Our Banklink to TPE bank', 'onepay - super awesome way to pay');
 INSERT INTO "data"."fin_service" (id, fin_company_id, fin_service_type_id, name, description)
   VALUES (3, 0, 1, 'Our Banklink to SEB bank', 'onepay - super awesome way to pay');
--- payment_method
-INSERT INTO "data"."payment_method" (id, fin_service_id, company_id, receiving_bank_account_id)
-  VALUES (1, 1, 1, 1);
-INSERT INTO "data"."payment_method" (id, fin_service_id, company_id, receiving_bank_account_id)
-  VALUES (2, 1, 1, 2);
-INSERT INTO "data"."payment_method" (id, fin_service_id, company_id, receiving_bank_account_id)
-  VALUES (3, 1, 3, 3);
-INSERT INTO "data"."payment_method" (id, fin_service_id, company_id, receiving_bank_account_id)
-  VALUES (4, 2, 1, 4);
-INSERT INTO "data"."payment_method" (id, fin_service_id, company_id, receiving_bank_account_id)
-  VALUES (5, 2, 3, 4);
-INSERT INTO "data"."payment_method" (id, fin_service_id, company_id, receiving_bank_account_id)
-  VALUES (6, 3, 1, 1);
-INSERT INTO "data"."payment_method" (id, fin_service_id, company_id, receiving_bank_account_id)
-  VALUES (7, 3, 1, 2);
-INSERT INTO "data"."payment_method" (id, fin_service_id, company_id, receiving_bank_account_id)
-  VALUES (8, 3, 3, 3);
+INSERT INTO "data"."fin_service" (id, fin_company_id, fin_service_type_id, name, description)
+  VALUES (4, 2, 1, 'SEB bank link', 'dull corporate bank link');
 
--- merchant_existing_payment_method
-INSERT INTO "data"."merchant_existing_payment_method" (id, merchant_id, payment_method_id)
-  VALUES (1, 1, 1);
-INSERT INTO "data"."merchant_existing_payment_method" (id, merchant_id, payment_method_id)
-  VALUES (2, 2, 2);
-INSERT INTO "data"."merchant_existing_payment_method" (id, merchant_id, payment_method_id)
-  VALUES (3, 3, 3);
+-- mapping between other fin services and our fin service
+INSERT INTO "data"."other_fin_service_to_our" (id, other_fin_service_id, our_alternative_fin_service_id)
+  VALUES (1, 1, 2);
+INSERT INTO "data"."other_fin_service_to_our" (id, other_fin_service_id, our_alternative_fin_service_id)
+  VALUES (2, 4, 3);
+
+-- payment_method
+INSERT INTO "data"."payment_method" (id, fin_service_id, merchant_id, receiving_bank_account_id)
+  VALUES (1, 1, 1, 2);
+INSERT INTO "data"."payment_method" (id, fin_service_id, merchant_id, receiving_bank_account_id)
+  VALUES (2, 3, 1, 2);
+INSERT INTO "data"."payment_method" (id, fin_service_id, merchant_id, receiving_bank_account_id)
+  VALUES (3, 2, 2, 1);
+INSERT INTO "data"."payment_method" (id, fin_service_id, merchant_id, receiving_bank_account_id)
+  VALUES (4, 3, 2, 1);
+INSERT INTO "data"."payment_method" (id, fin_service_id, merchant_id, receiving_bank_account_id)
+  VALUES (5, 1, 3, 3);
+INSERT INTO "data"."payment_method" (id, fin_service_id, merchant_id, receiving_bank_account_id)
+  VALUES (6, 4, 3, 3);
+
 -- fee
 INSERT INTO "data"."fee" (id, fin_service_id, fee_type_id, valid_from_date, amount)
   VALUES (1, 1, 1, '1999-01-01', 0.31);

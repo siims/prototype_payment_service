@@ -4,8 +4,6 @@ DROP TABLE IF EXISTS "data"."transaction";
 DROP SEQUENCE IF EXISTS "data"."transaction_id_seq";
 DROP TABLE IF EXISTS "data"."account";
 DROP SEQUENCE IF EXISTS "data"."account_id_seq";
-DROP TABLE IF EXISTS "data"."merchant_existing_payment_method";
-DROP SEQUENCE IF EXISTS "data"."merchant_existing_payment_method_id_seq";
 DROP TABLE IF EXISTS "data"."order";
 DROP SEQUENCE IF EXISTS "data"."order_id_seq";
 
@@ -17,6 +15,8 @@ DROP TABLE IF EXISTS "data"."crypt_key";
 DROP SEQUENCE IF EXISTS "data"."crypt_key_id_seq";
 DROP TABLE IF EXISTS "data"."bank_account";
 DROP SEQUENCE IF EXISTS "data"."bank_account_id_seq";
+DROP TABLE IF EXISTS "data"."other_fin_service_to_our";
+DROP SEQUENCE IF EXISTS "data"."other_fin_service_to_our_id_seq";
 DROP TABLE IF EXISTS "data"."fin_service";
 DROP SEQUENCE IF EXISTS "data"."fin_service_id_seq";
 DROP TABLE IF EXISTS "data"."fin_company";
