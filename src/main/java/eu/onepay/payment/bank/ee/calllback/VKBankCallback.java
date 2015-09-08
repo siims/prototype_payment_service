@@ -3,7 +3,6 @@ package eu.onepay.payment.bank.ee.calllback;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.security.PublicKey;
 import java.security.Signature;
 import java.security.cert.CertificateException;
@@ -12,12 +11,15 @@ import java.security.cert.X509Certificate;
 
 import javax.servlet.http.HttpServletRequest;
 
+import lombok.extern.slf4j.Slf4j;
+
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
 
 import eu.onepay.payment.bank.ee.BankEE;
 import eu.onepay.payment.bank.ee.VKBankPayCredentials;
 
+@Slf4j
 public class VKBankCallback {
 
     private HttpServletRequest req;
@@ -83,7 +85,6 @@ public class VKBankCallback {
                 getVK_MSG(),
                 getVK_T_DATETIME()
                 };
-        System.out.println("Mymac:" + BankEE.generateMac(params));
         return BankEE.generateMac(params);
     }
 

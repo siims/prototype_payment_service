@@ -54,6 +54,7 @@ Now you need to add your key to the truststore.ks.
 Tomcat:
 
 To get UTF-8 charset for post requests uncomment the following line in the tomcat web.xml:
+
 	<filter>
         <filter-name>setCharacterEncodingFilter</filter-name>
         <filter-class>org.apache.catalina.filters.SetCharacterEncodingFilter</filter-class>

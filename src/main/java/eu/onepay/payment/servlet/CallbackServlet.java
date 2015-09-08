@@ -39,11 +39,7 @@ public class CallbackServlet extends HttpServlet {
         if (payCrede instanceof VKBankPayCredentials) {
             VKBankCallback callback = new VKBankCallback(request, (VKBankPayCredentials) payCrede);
             System.out.println("Valid: " + callback.isValid());
-            
         }
-        
-        
-
     }
 
     private PaymentCredential getPayCredential(Long merchantId, Long paymentId) {
