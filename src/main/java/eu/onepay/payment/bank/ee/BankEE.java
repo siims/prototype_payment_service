@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.security.InvalidKeyException;
@@ -50,7 +51,7 @@ public abstract class BankEE extends PayMethod{
 
     }
 
-    String generateMac(String[] data) throws Exception {
+    public static String generateMac(String[] data) throws Exception {
         StringBuilder b = new StringBuilder();
 
         for (String par : data) {
@@ -66,14 +67,14 @@ public abstract class BankEE extends PayMethod{
         return b.toString();
     }
 
-    String getThreePlacedStringLength(String string) {
+    public static String getThreePlacedStringLength(String string) throws UnsupportedEncodingException {
 
         byte[] bytes = addSymbolsLeft(string, '0', 3);
         return new String(bytes);
 
     }
 
-    private byte[] addSymbolsLeft(String str, char c, int len) {
+    public static byte[] addSymbolsLeft(String str, char c, int len) {
 
         String s = Integer.toString(str.length());
 

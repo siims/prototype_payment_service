@@ -12,6 +12,7 @@ import lombok.Data;
 public class MerchantCredentials {
 
     public static final String CONTEXT_KEY = "merchantCredentials";
+    public static final String URL_KEY = "merchant";
     private Long merchantId = 0L;
     private String name;
     

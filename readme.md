@@ -51,6 +51,26 @@ Now you need to add your key to the truststore.ks.
 
 -Now replace the alias name in 'OurServletContext.java' - variable name is 'privateKeyAlias' - with the alias you chose.
 
+Tomcat:
+
+To get UTF-8 charset for post requests uncomment the following line in the tomcat web.xml:
+	<filter>
+        <filter-name>setCharacterEncodingFilter</filter-name>
+        <filter-class>org.apache.catalina.filters.SetCharacterEncodingFilter</filter-class>
+        <init-param>
+            <param-name>encoding</param-name>
+            <param-value>UTF-8</param-value>
+        </init-param>
+        <async-supported>true</async-supported>
+    </filter>
+
+
+    <filter-mapping>
+        <filter-name>setCharacterEncodingFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>	
+
+
 Should work! :) 
 
 Right now only SEB payment is implemented

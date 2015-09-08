@@ -16,9 +16,10 @@ public class VKBankPayCredentials implements PaymentCredential {
     private String privateKeyAlias;
     private String defaultReturnUrl;
     private String defaultCancelUrl;
+    private String publicKey;
     
-
-    public VKBankPayCredentials ( Long paymentId, String sendersId, String returnUrl, String cancelUrl, String privateKeyAlias, String defaultReturnUrl, String defaultCancelUrl ){
+    public VKBankPayCredentials ( Long paymentId, String sendersId, String returnUrl, String cancelUrl,
+            String privateKeyAlias, String defaultReturnUrl, String defaultCancelUrl, String publicKey ){
         this.paymentId = paymentId;
         this.sendersId = sendersId;
         this.returnUrl = returnUrl;
@@ -26,7 +27,8 @@ public class VKBankPayCredentials implements PaymentCredential {
         this.privateKeyAlias = privateKeyAlias;
         this.defaultReturnUrl = defaultReturnUrl;
         this.defaultCancelUrl = defaultCancelUrl;
-        
+        this.publicKey = publicKey;
+
     }
 
     @Override
@@ -55,7 +57,7 @@ public class VKBankPayCredentials implements PaymentCredential {
     }
 
     public String getCurrency() {
-        return currency ;
+        return currency;
     }
 
     public String getEncoding() {
@@ -73,6 +75,10 @@ public class VKBankPayCredentials implements PaymentCredential {
 
     public String getDefaultCancelUrl() {
         return defaultCancelUrl;
+    }
+
+    public String getPublicKey() {
+        return publicKey;
     }
 
 }
