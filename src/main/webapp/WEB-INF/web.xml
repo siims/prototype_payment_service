@@ -6,7 +6,7 @@
 	<display-name>Archetype Created Web Application</display-name>
 
 	<servlet>
-		<servlet-name>HelloWorld</servlet-name>
+		<servlet-name>PaymentEP</servlet-name>
 		<servlet-class>eu.onepay.payment.servlet.ApiServlet</servlet-class>
 	</servlet>
 	<servlet>
@@ -16,7 +16,7 @@
 
 
 	<servlet-mapping>
-		<servlet-name>HelloWorld</servlet-name>
+		<servlet-name>PaymentEP</servlet-name>
 		<url-pattern>/pay</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>

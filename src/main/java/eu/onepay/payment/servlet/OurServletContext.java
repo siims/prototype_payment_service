@@ -11,7 +11,6 @@ import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
 
 import eu.onepay.payment.MerchantCredentials;
-import eu.onepay.payment.OurTransaction;
 import eu.onepay.payment.PayMethod;
 import eu.onepay.payment.PaymentCredential;
 import eu.onepay.payment.bank.ee.BankEE;
@@ -28,32 +27,21 @@ public class OurServletContext implements ServletContextListener {
     public void contextInitialized(ServletContextEvent event) {
         ServletContext serCtx = event.getServletContext();
 
-        setDefaultPaymentMethods(serCtx);
-        setDefaultPaymentCedentials(serCtx);
+        setPaymentMethods(serCtx);
 
         setMerchantCredentials(serCtx);
 
-        setCustomPaymentCredential(serCtx);
-        
-        setTransActionsQueue(serCtx);
+        setPaymentCredential(serCtx);
 
         String keyLocation = "/WEB-INF/classes/truststore.ks";
         BankEE.keyLocation = serCtx.getRealPath(keyLocation).toString();
-    }
-
-    private void setTransActionsQueue(ServletContext serCtx) {
-        
-        
-        
-        
-        
     }
 
     private void setMerchantCredentials(ServletContext serCtx) {
 
         Map<Long, MerchantCredentials> merchantCrede = new HashMap<>();
         // TODO: connect with some sort of database - document based perhaps
-        // 
+        //
         MerchantCredentials merchCrede = new MerchantCredentials();
         merchCrede.setMerchantId(1234L);
         merchCrede.setName("Human Readable e.g. comapy name");
@@ -63,41 +51,13 @@ public class OurServletContext implements ServletContextListener {
 
     }
 
-    private void setDefaultPaymentCedentials(ServletContext serCtx) {
-        Map<Long, PaymentCredential> payCredential = new HashMap<Long, PaymentCredential>();
-        PaymentCredential payCrede;
-        // TODO: connect with some sort of database - document based perhaps
-        // SOLR for example.
-        // Siin pannakse kokku siis PaymentCredential'id mida meie defaultis
-        // anname.
-        // Võimalik, et tuleks ka ülejäänud parameetrid lisada siin, payment
-        // construktorisse.
-        // Trikk on siin, erinevad payment meetodid omavad erinevaid
-        // paymentCredentialeid.
-        // Kuidagi neid tuleks panna eristama teineteisest.
-        // Näiteks eesti pangad kasutavad kõik VKBankPayCredentials'it. Teised
-        // makseviisid ka muid.
-
-        // sendersID = panga poolt meie ettevõttele antud ID
-        String sendersId = "uid100010";
-        String returnUrl = "http://localhost:8080/pankpayment/";
-        String cancelUrl = "http://localhost:8080/pankpayment/";
-        // privateKeyAlias keyfailis olevat võtme alias
-        String privateKeyAlias = "1";
-
-        payCrede = new VKBankPayCredentials(23L, sendersId, returnUrl, cancelUrl, privateKeyAlias);
-        payCredential.put(payCrede.getPaymentId(), payCrede);
-
-        serCtx.setAttribute(PaymentCredential.CREDE_KEY, payCredential);
-    }
-
     /**
      * For every Merchant add their custom payment method credentials to the
      * their map.
      * 
      * @param serCtx
      */
-    private void setCustomPaymentCredential(ServletContext serCtx) {
+    private void setPaymentCredential(ServletContext serCtx) {
 
         // <merchantID <paymentId, PaymentCredential>>
         Map<Long, Map<Long, PaymentCredential>> merchantPayCredentials = new HashMap<Long, Map<Long, PaymentCredential>>();
@@ -105,13 +65,13 @@ public class OurServletContext implements ServletContextListener {
         // get all merchant ID's in a list. And connect with their
         // paymentCredentials.
         List<Long> merchants = new ArrayList<>();
-        merchants.add(234L);
+        merchants.add(1234L);
         // TODO: LookUp all merchants who have custom paymentCredentials.
         for (Long merchant : merchants) {
             Map<Long, PaymentCredential> payCredentials = getPayCredentials(merchant);
             merchantPayCredentials.put(merchant, payCredentials);
         }
-        serCtx.setAttribute(PaymentCredential.CUSTOM_CREDE_KEY, merchantPayCredentials);
+        serCtx.setAttribute(PaymentCredential.CREDE_KEY, merchantPayCredentials);
     }
 
     /**
@@ -125,11 +85,12 @@ public class OurServletContext implements ServletContextListener {
         Map<Long, PaymentCredential> payCredential = new HashMap<Long, PaymentCredential>();
         // TODO: connect with some sort of database - document based perhaps
         // SOLR for example.
-        // like setDefaultPaymentCedentials but only get those paymentCredentials
+        // like setDefaultPaymentCedentials but only get those
+        // paymentCredentials
         // that are customConfigured for the merchant
         String sendersId = "uid100010";
-        String returnUrl = "http://localhost:8080/pankpayment/";
-        String cancelUrl = returnUrl;
+        String returnUrl = "http://localhost:8080/pankpayment/callback?pmid=23";
+        String cancelUrl = "http://localhost:8080/pankpayment/";
         String privateKeyAlias = "1";
 
         VKBankPayCredentials payCrede = new VKBankPayCredentials(23L, sendersId, returnUrl, cancelUrl, privateKeyAlias);
@@ -141,7 +102,7 @@ public class OurServletContext implements ServletContextListener {
         return payCredential;
     }
 
-    private void setDefaultPaymentMethods(ServletContext serCtx) {
+    private void setPaymentMethods(ServletContext serCtx) {
         @SuppressWarnings("rawtypes")
         Map<Long, Class> payMethods = new HashMap<Long, Class>();
         // TODO: connect with some sort of database - document based perhaps

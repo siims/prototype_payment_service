@@ -19,10 +19,11 @@ public class PaymentAction {
     public static PayMethod makeTransaction(PaymentRequest payRequest, ServletContext servCtx) {
         PaymentAction paymentAction = new PaymentAction(payRequest, servCtx);
         PayMethod payMethod = paymentAction.getPayMethod();
-        // TODO: Save the payMethod to database
-        OurTransaction transaction = new OurTransaction();// = Database.saveAsTransaction(payMethod);
+        // TODO: DATABASE: Save the payMethod to database
+        OurTransaction transaction = new OurTransaction();// =
+                                                          // Database.saveAsTransaction(payMethod);
         payMethod.setTransaction(transaction);
-        
+
         return payMethod;
     }
 
@@ -30,21 +31,20 @@ public class PaymentAction {
 
         this.servCtx = servCtx;
 
-         orderCrede = getOrderCredentials(payRequest);
-         merchCrede = getMerchantCredentials(payRequest.merchantId);
-         payCrede = getPayCrededentials(merchCrede.getMerchantId(), payRequest.paymentId);
+        orderCrede = getOrderCredentials(payRequest);
+        merchCrede = getMerchantCredentials(payRequest.merchantId);
+        payCrede = getPaymentCredentials(merchCrede.getMerchantId(), payRequest.paymentId);
 
-        
     }
 
     private PayMethod getPayMethod() {
 
         PayMethod method = getDefaultPaymentMethod(payCrede.getPaymentId());
         method.initAndVerify(payCrede, orderCrede, merchCrede);
-        if(method.notValid()){
+        if (method.notValid()) {
             method = NullObject.payMethod();
         }
-        
+
         return method;
     }
 
@@ -66,23 +66,6 @@ public class PaymentAction {
         return orderCrede;
     }
 
-    private PaymentCredential getPayCrededentials(Long merchantId, Long paymentId) {
-        PaymentCredential payCrede = getCustomPaymentCredentials(merchantId, paymentId);
-        if (payCrede == null) {
-            payCrede = getDefaultPaymentCredential(paymentId);
-        }
-
-        return payCrede;
-    }
-
-    @SuppressWarnings("unchecked")
-    private PaymentCredential getDefaultPaymentCredential(Long paymentId) {
-        Map<Long, PaymentCredential> payMethods = (Map<Long, PaymentCredential>) servCtx
-                .getAttribute(PaymentCredential.CREDE_KEY);
-        PaymentCredential payCredential = payMethods.get(paymentId);
-        return payCredential;
-    }
-
     @SuppressWarnings("rawtypes")
     private PayMethod getDefaultPaymentMethod(Long paymentId) {
         @SuppressWarnings("unchecked")
@@ -102,15 +85,16 @@ public class PaymentAction {
         return payMethod;
     }
 
-    private PaymentCredential getCustomPaymentCredentials(Long merchantId, Long paymentId) {
+    private PaymentCredential getPaymentCredentials(Long merchantId, Long paymentId) {
 
         try {
             @SuppressWarnings("unchecked")
             Map<Long, Map<Long, PaymentCredential>> merchantPayMethods = (Map<Long, Map<Long, PaymentCredential>>) servCtx
-                    .getAttribute(PaymentCredential.CUSTOM_CREDE_KEY);
+                    .getAttribute(PaymentCredential.CREDE_KEY);
             Map<Long, PaymentCredential> payCredentials = merchantPayMethods.get(merchantId);
             return payCredentials.get(paymentId);
         } catch (NullPointerException e) {
+            e.printStackTrace();
             return null;
         }
 
