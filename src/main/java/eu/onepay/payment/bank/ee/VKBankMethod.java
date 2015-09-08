@@ -60,7 +60,7 @@ public class VKBankMethod extends BankEE {
     }
 
     public String getVK_CANCEL() {
-        return payCrede.getDefaultReturnUrl();
+        return payCrede.getDefaultCancelUrl();
     }
 
     public String getVK_SND_ID() {
