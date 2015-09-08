@@ -10,7 +10,8 @@ public class Form {
     private List<InputElement> inputs = new ArrayList<>();
     private String INPUT_NAME = "%NAME%";
     private String INPUT_VALUE = "%VALUE%";
-    private String INPUT_STRING = "<input name=\"" + INPUT_NAME + "\" value=\"" + INPUT_VALUE + "\">";
+    private String INPUT_STRING = INPUT_NAME + " " + "<input  name=\"" + INPUT_NAME + "\" value=\"" + INPUT_VALUE
+            + "\">";
     private String LINE_BREAK = "<br>";
 
     @Override
@@ -22,7 +23,7 @@ public class Form {
         for (InputElement input : inputs) {
 
             String inputString = INPUT_STRING.replace(INPUT_NAME, input.getName());
-            inputString = inputString.replace(INPUT_VALUE, input.getValue());
+            inputString = inputString.replaceAll(INPUT_VALUE, input.getValue());
 
             formAsString.append(inputString);
             formAsString.append(LINE_BREAK);
@@ -31,9 +32,9 @@ public class Form {
 
         return formAsString.toString();
     }
-    
-    public void addInputElement(String name, String value){
-        InputElement input = new InputElement(name,value);
+
+    public void addInputElement(String name, String value) {
+        InputElement input = new InputElement(name, value);
         this.setInput(input);
     }
 
