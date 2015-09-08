@@ -89,7 +89,7 @@ public class OurServletContext implements ServletContextListener {
         // paymentCredentials
         // that are customConfigured for the merchant
         String sendersId = "uid100010";
-        String returnUrl = "http://localhost:8080/pankpayment/callback?pmid=23";
+        String returnUrl = "http://localhost:8080/pankpayment/callback/23";
         String cancelUrl = "http://localhost:8080/pankpayment/";
         String privateKeyAlias = "1";
 

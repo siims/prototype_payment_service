@@ -21,7 +21,7 @@
 	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>PaymentCallback</servlet-name>
-		<url-pattern>/callback</url-pattern>
+		<url-pattern>/callback/*</url-pattern>
 	</servlet-mapping>
 
 
