@@ -89,14 +89,17 @@ public class OurServletContext implements ServletContextListener {
         // paymentCredentials
         // that are customConfigured for the merchant
         String sendersId = "uid100010";
-        String returnUrl = "http://localhost:8080/pankpayment/callback/23";
-        String cancelUrl = "http://localhost:8080/pankpayment/";
+        String returnUrl = "http://merchant.eu/callback/23";
+        String cancelUrl = "http://merchant.eu/callback/23";
         String privateKeyAlias = "1";
 
-        VKBankPayCredentials payCrede = new VKBankPayCredentials(23L, sendersId, returnUrl, cancelUrl, privateKeyAlias);
+        String defaultCancelUrl="http://localhost:8080/pankpayment/callback/23/merchant/1234";;
+        String defaultReturnUrl="http://localhost:8080/pankpayment/";;
+        
+        VKBankPayCredentials payCrede = new VKBankPayCredentials(23L, sendersId, returnUrl, cancelUrl, privateKeyAlias, defaultReturnUrl, defaultCancelUrl);
         payCredential.put(payCrede.getPaymentId(), payCrede);
 
-        payCrede = new VKBankPayCredentials(24L, sendersId, returnUrl, cancelUrl, privateKeyAlias);
+        payCrede = new VKBankPayCredentials(24L, sendersId, returnUrl, cancelUrl, privateKeyAlias, defaultReturnUrl, defaultCancelUrl);
         payCredential.put(payCrede.getPaymentId(), payCrede);
 
         return payCredential;

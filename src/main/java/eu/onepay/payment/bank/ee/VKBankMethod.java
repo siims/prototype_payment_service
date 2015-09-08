@@ -56,11 +56,11 @@ public class VKBankMethod extends BankEE {
 
 
     public String getVK_RETURN() {
-        return payCrede.getReturnUrl();
+        return payCrede.getDefaultReturnUrl();
     }
 
     public String getVK_CANCEL() {
-        return payCrede.getCancelUrl();
+        return payCrede.getDefaultReturnUrl();
     }
 
     public String getVK_SND_ID() {

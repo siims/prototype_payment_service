@@ -14,14 +14,18 @@ public class VKBankPayCredentials implements PaymentCredential {
     private String currency = "EUR";
     private String encoding = "UTF-8";
     private String privateKeyAlias;
+    private String defaultReturnUrl;
+    private String defaultCancelUrl;
     
 
-    public VKBankPayCredentials ( Long paymentId, String sendersId, String returnUrl, String cancelUrl, String privateKeyAlias ){
+    public VKBankPayCredentials ( Long paymentId, String sendersId, String returnUrl, String cancelUrl, String privateKeyAlias, String defaultReturnUrl, String defaultCancelUrl ){
         this.paymentId = paymentId;
         this.sendersId = sendersId;
         this.returnUrl = returnUrl;
         this.cancelUrl = cancelUrl;
         this.privateKeyAlias = privateKeyAlias;
+        this.defaultReturnUrl = defaultReturnUrl;
+        this.defaultCancelUrl = defaultCancelUrl;
         
     }
 
@@ -61,6 +65,14 @@ public class VKBankPayCredentials implements PaymentCredential {
     public String getPrivetKeyAlias() {
 
         return privateKeyAlias;
+    }
+
+    public String getDefaultReturnUrl() {
+        return defaultReturnUrl;
+    }
+
+    public String getDefaultCancelUrl() {
+        return defaultCancelUrl;
     }
 
 }
