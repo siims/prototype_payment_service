@@ -20,7 +20,7 @@ public class VKBankMethod extends BankEE {
 
     public VKBankMethod ( Long id ){
         super(id);
-        
+
     }
 
     @Override
@@ -53,7 +53,6 @@ public class VKBankMethod extends BankEE {
         this.merchCrede = merchCrede;
         this.id = payCrede.getPaymentId();
     }
-
 
     public String getVK_RETURN() {
         return payCrede.getDefaultReturnUrl();
@@ -106,7 +105,7 @@ public class VKBankMethod extends BankEE {
         retString = merchCrede.getMerchantId() + ":" + merchCrede.getName() + ": " + orderCrede.getId()
                 + orderCrede.getDescription();
 
-        return StringUtils.substring(retString, 0, 95);
+        return StringUtils.substring(retString, 0, 94);
     }
 
     @Override
@@ -156,7 +155,7 @@ public class VKBankMethod extends BankEE {
     public String getVK_DATETIME() {
         return getCurrentDate();
     }
-    
+
     @Override
     public OurTransaction getTransaction() {
         super.getTransaction().setTimeToWait(300_000L);

@@ -22,6 +22,8 @@ public class CallbackServlet extends HttpServlet {
     public void doPost(HttpServletRequest request, HttpServletResponse response) {
         System.out.println("post:" + request.getRequestURL());
         logic(request, response);
+        
+        
 
     }
 

@@ -115,11 +115,12 @@ public class OurServletContext implements ServletContextListener {
         // Get payment ID and connect it with required class
         try {
             long paymentId = 23L;
-            Class<?> act = Class.forName("eu.onepay.payment.bank.ee.VKBankMethod");
+            @SuppressWarnings("unchecked")
+            Class<PayMethod> act = (Class<PayMethod>) Class.forName("eu.onepay.payment.bank.ee.VKBankMethod");
+            
             payMethods.put(paymentId, act);
 
         } catch (ClassNotFoundException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         serCtx.setAttribute(PayMethod.CONTEXT_KEY, payMethods);
