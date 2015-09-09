@@ -15,7 +15,7 @@ import org.springframework.orm.hibernate4.LocalSessionFactoryBuilder;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
-@PropertySource("db.properties")
+@PropertySource("classpath:db.properties")
 @EnableTransactionManagement
 public class DBConfiguration {
 
@@ -34,7 +34,7 @@ public class DBConfiguration {
     }
 
     @Bean
-    public SessionFactory dbSessionFactory() {
+    public SessionFactory dataSessionFactory() {
         LocalSessionFactoryBuilder sessionFactory = new LocalSessionFactoryBuilder(dataSource());
 
         sessionFactory.scanPackages(env.getProperty("db.data"), "eu.onepay.db.util");
@@ -50,7 +50,7 @@ public class DBConfiguration {
 
     @Bean
     public HibernateTransactionManager transactionManager() {
-        return new HibernateTransactionManager(dbSessionFactory());
+        return new HibernateTransactionManager(dataSessionFactory());
     }
 
     @Bean

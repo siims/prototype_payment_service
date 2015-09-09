@@ -15,11 +15,11 @@ public abstract class AbstractData {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     public AbstractData() {}
 
-    public AbstractData(Integer id) {
+    public AbstractData(Long id) {
         this.id = id;
     }
 }

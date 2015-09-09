@@ -14,10 +14,10 @@ import eu.onepay.db.resource.data.CompanyResource;
 @Slf4j
 @Service
 @Transactional
-public class CompanyResourceImpl extends AbstractCleanResource implements CompanyResource {
+public class CompanyResourceImpl extends AbstractResource implements CompanyResource {
 
     @Override
-    public Integer companyId(String registrationCode, Integer countryCode) {
+    public Long companyId(String registrationCode, Integer countryCode) {
         Company company = (Company) session().createCriteria(Company.class).add(
                 Restrictions.eq(Company.FLD_REG_CODE, registrationCode)).add(
                 Restrictions.eq(Company.FLD_COUNTRY_ID, countryCode)).uniqueResult();

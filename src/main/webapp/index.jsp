@@ -24,8 +24,8 @@ function inputLenghtToContentSize(){
 }
 
 	var data = {
-			merchant_id: "1234",
-			pay_option: "23",
+			merchant_id: "1",
+			pay_option: "1",
 			order_id: "12345",
 			amount: "123",
 			reference_no: "12344",
@@ -34,7 +34,7 @@ function inputLenghtToContentSize(){
 	}
 	var form;
 	$.ajax({
-		url:"/pankpayment/pay",
+		url:"/onepay_bankpayment/pay",
 		method:"POST",
 		processData: false,
 		data: JSON.stringify(data),

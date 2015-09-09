@@ -27,7 +27,7 @@ public abstract class AbstractClassifierData extends AbstractData {
 
     public AbstractClassifierData() {}
 
-    public AbstractClassifierData(int id) {
+    public AbstractClassifierData(Long id) {
         super(id);
     }
 }

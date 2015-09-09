@@ -10,14 +10,15 @@ import org.springframework.transaction.annotation.Transactional;
 
 import eu.onepay.db.data.AbstractData;
 import eu.onepay.db.resource.Resource;
+import eu.onepay.db.resource.data.CRUDResource;
 
 
 @SuppressWarnings("unchecked")
 @Transactional
-public abstract class AbstractCleanResource implements Resource {
+public abstract class AbstractResource implements Resource, CRUDResource {
 
     @Autowired
-    private SessionFactory cleanSessionFactory;
+    private SessionFactory dataSessionFactory;
 
     public <T> T byId(Class<T> type, int id) {
         return (T) session().get(type, id);
@@ -37,10 +38,10 @@ public abstract class AbstractCleanResource implements Resource {
 
     @Override
     public Session session() {
-        return cleanSessionFactory.getCurrentSession();
+        return dataSessionFactory.getCurrentSession();
     }
 
-    protected Integer getResultRowIdCode(AbstractData queryResult) {
+    protected Long getResultRowIdCode(AbstractData queryResult) {
         return queryResult != null ? queryResult.getId() : null;
     }
 }

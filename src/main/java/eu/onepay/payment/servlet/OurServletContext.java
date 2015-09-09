@@ -1,23 +1,43 @@
 package eu.onepay.payment.servlet;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
 
+import lombok.extern.slf4j.Slf4j;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
+
+import eu.onepay.db.data.Merchant;
+import eu.onepay.db.resource.data.MerchantResource;
 import eu.onepay.payment.MerchantCredentials;
 import eu.onepay.payment.PayMethod;
 import eu.onepay.payment.PaymentCredential;
 import eu.onepay.payment.bank.ee.BankEE;
 import eu.onepay.payment.bank.ee.VKBankPayCredentials;
 
+@Slf4j
+@Component
 @WebListener
 public class OurServletContext implements ServletContextListener {
+
+    @Autowired
+    private MerchantResource merchantResource;
+
+    @Autowired
+    private ApplicationContext applicationContext;
 
     @Override
     public void contextDestroyed(ServletContextEvent arg0) {
@@ -39,13 +59,18 @@ public class OurServletContext implements ServletContextListener {
 
     private void setMerchantCredentials(ServletContext serCtx) {
 
-        Map<Long, MerchantCredentials> merchantCrede = new HashMap<>();
+//        Map<Long, MerchantCredentials> merchantCrede = new HashMap<>();
         // TODO: connect with some sort of database - document based perhaps
         //
-        MerchantCredentials merchCrede = new MerchantCredentials();
-        merchCrede.setMerchantId(1234L);
-        merchCrede.setName("Human Readable e.g. comapy name");
-        merchantCrede.put(merchCrede.getMerchantId(), merchCrede);
+        log.error("BAAAAAEEE {} {}", merchantResource == null, Arrays.toString(applicationContext.getBeanDefinitionNames()));
+        log.info("FOOOOO: {}", merchantResource.listActive());
+        Map<Long, MerchantCredentials> merchantCrede = merchantResource.listActive().stream()
+            .collect(Collectors.toMap(merchant -> merchant.getId(), 
+                     merchant -> MerchantCredentials.makeMerchantCredentials(merchant)));
+//        MerchantCredentials merchCrede = new MerchantCredentials();
+//        merchCrede.setMerchantId(1234L);
+//        merchCrede.setName("Human Readable e.g. comapy name");
+//        merchantCrede.put(merchCrede.getMerchantId(), merchCrede);
 
         serCtx.setAttribute(MerchantCredentials.CONTEXT_KEY, merchantCrede);
 
@@ -126,5 +151,4 @@ public class OurServletContext implements ServletContextListener {
         serCtx.setAttribute(PayMethod.CONTEXT_KEY, payMethods);
 
     }
-
 }

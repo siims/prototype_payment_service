@@ -5,7 +5,7 @@ import eu.onepay.db.data.Company;
 
 public interface CompanyResource extends CRUDResource {
 
-    public Integer companyId(String registrationCode, Integer countryCode);
+    public Long companyId(String registrationCode, Integer countryCode);
 
     public boolean deactivateCompany(int companyId);
 

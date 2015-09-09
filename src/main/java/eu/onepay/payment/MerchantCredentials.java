@@ -1,5 +1,6 @@
 package eu.onepay.payment;
 
+import eu.onepay.db.data.Merchant;
 import lombok.Data;
 
 /**
@@ -15,5 +16,11 @@ public class MerchantCredentials {
     public static final String URL_KEY = "merchant";
     private Long merchantId = 0L;
     private String name;
-    
+
+    public static MerchantCredentials makeMerchantCredentials(Merchant merchant) {
+        MerchantCredentials merchantCredentials = new MerchantCredentials();
+        merchantCredentials.setMerchantId(merchant.getId());
+        merchantCredentials.setName(merchant.getName());
+        return merchantCredentials;
+    }
 }

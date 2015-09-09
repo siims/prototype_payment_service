@@ -119,6 +119,4 @@ public abstract class BankEE extends PayMethod{
 
     }
 
-    
-
 }
