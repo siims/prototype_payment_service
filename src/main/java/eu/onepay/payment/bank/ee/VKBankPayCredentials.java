@@ -1,5 +1,7 @@
 package eu.onepay.payment.bank.ee;
 
+import java.net.MalformedURLException;
+
 import eu.onepay.payment.PaymentCredential;
 
 public class VKBankPayCredentials implements PaymentCredential {
@@ -19,16 +21,26 @@ public class VKBankPayCredentials implements PaymentCredential {
     private String publicKey;
     
     public VKBankPayCredentials ( Long paymentId, String sendersId, String returnUrl, String cancelUrl,
-            String privateKeyAlias, String defaultReturnUrl, String defaultCancelUrl, String publicKey ){
+            String privateKeyAlias, String defaultReturnUrl, String defaultCancelUrl, String publicKey ) throws MalformedURLException{
         this.paymentId = paymentId;
         this.sendersId = sendersId;
-        this.returnUrl = returnUrl;
-        this.cancelUrl = cancelUrl;
+        this.returnUrl = veryfyUrl(returnUrl);
+        this.cancelUrl = veryfyUrl(cancelUrl);
         this.privateKeyAlias = privateKeyAlias;
         this.defaultReturnUrl = defaultReturnUrl;
         this.defaultCancelUrl = defaultCancelUrl;
         this.publicKey = publicKey;
 
+    }
+
+    private String veryfyUrl(String url) throws MalformedURLException {
+        // TODO Auto-generated method stub
+        boolean startsWith = url.startsWith("http://");
+        if(startsWith){
+            return url;
+        }else{
+            throw new MalformedURLException("URL:"+url+" but should start with: http://");
+        }
     }
 
     @Override

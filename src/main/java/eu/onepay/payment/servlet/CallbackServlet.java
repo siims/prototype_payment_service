@@ -1,5 +1,7 @@
 package eu.onepay.payment.servlet;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -20,11 +22,12 @@ public class CallbackServlet extends HttpServlet {
     public static final String PAY_CALLBACK = "callback";
 
     public void doPost(HttpServletRequest request, HttpServletResponse response) {
-        System.out.println("post:" + request.getRequestURL());
-        logic(request, response);
-        
-        
-
+        String redirectUrl = logic(request, response);
+        try {
+            response.sendRedirect(redirectUrl);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) {
@@ -33,15 +36,22 @@ public class CallbackServlet extends HttpServlet {
 
     }
 
-    private void logic(HttpServletRequest request, HttpServletResponse response) {
+    private String logic(HttpServletRequest request, HttpServletResponse response) {
         servCtx = request.getServletContext();
         Long merchantId = getMerchantId(request);
         Long paymentId = getPaymentId(request);
         PaymentCredential payCrede = getPayCredential(merchantId, paymentId);
+        String redirectUri = "";
         if (payCrede instanceof VKBankPayCredentials) {
             VKBankCallback callback = new VKBankCallback(request, (VKBankPayCredentials) payCrede);
             System.out.println("Valid: " + callback.isValid());
+            if (callback.isValid()) {
+                redirectUri = ((VKBankPayCredentials) payCrede).getReturnUrl();
+            } else {
+                redirectUri = ((VKBankPayCredentials) payCrede).getCancelUrl();
+            }
         }
+        return redirectUri;
     }
 
     private PaymentCredential getPayCredential(Long merchantId, Long paymentId) {
@@ -72,7 +82,7 @@ public class CallbackServlet extends HttpServlet {
         Matcher matcher = pattern.matcher(requestURL);
         if (matcher.find()) {
             retStr = matcher.group(1);
-        }else{
+        } else {
             System.out.println("didn't find");
         }
         System.out.println(retStr);

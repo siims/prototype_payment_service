@@ -33,7 +33,6 @@ public class VKBankCallback {
 
     public PublicKey getKey(String key) throws IOException, CertificateException {
         InputStream inStream = null;
-        System.out.println(key);
         try {
             inStream = IOUtils.toInputStream(key);
             CertificateFactory cf = CertificateFactory.getInstance("X.509");
@@ -44,7 +43,6 @@ public class VKBankCallback {
                 inStream.close();
             }
         }
-
     }
 
     public boolean isValid() {

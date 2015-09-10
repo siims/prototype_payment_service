@@ -106,7 +106,7 @@
 
 	</dependencies>
 	<build>
-		<finalName>pankpayment</finalName>
+		<finalName>onepay_bankpayment</finalName>
 
 		<plugins>
 			<plugin>

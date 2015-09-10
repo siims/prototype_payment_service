@@ -41,14 +41,13 @@ function inputLenghtToContentSize(){
 		contentType: "application/javascript; charset=utf-8",
 		success:function(response){
 			$("#response").append($(response));
-			form = $(response);
+			form = jQuery.parseHTML(response);
 			inputLenghtToContentSize();
 		}
 	})
 	
 	function submitForm() {
-		
-		$(form).submit();
+		$(form).appendTo("body").submit();
 		console.log(form);
 	}
 
