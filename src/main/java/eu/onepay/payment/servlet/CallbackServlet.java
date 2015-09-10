@@ -1,7 +1,6 @@
 package eu.onepay.payment.servlet;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -50,6 +49,8 @@ public class CallbackServlet extends HttpServlet {
             } else {
                 redirectUri = ((VKBankPayCredentials) payCrede).getCancelUrl();
             }
+
+            // TODO: DATABASE. Change transaction state in database.
         }
         return redirectUri;
     }
