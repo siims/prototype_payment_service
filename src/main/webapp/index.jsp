@@ -34,7 +34,7 @@ function inputLenghtToContentSize(){
 	}
 	var form;
 	$.ajax({
-		url:"/pankpayment/pay",
+		url:"/onepay_bankpayment/pay",
 		method:"POST",
 		processData: false,
 		data: JSON.stringify(data),
@@ -42,8 +42,13 @@ function inputLenghtToContentSize(){
 		success:function(response){
 			$("#response").append($(response));
 			form = jQuery.parseHTML(response);
+			console.log(response);
 			inputLenghtToContentSize();
-		}
+		},
+		fail:function(response){
+			console.log("Fail")
+			console.log(response);
+			},
 	})
 	
 	function submitForm() {

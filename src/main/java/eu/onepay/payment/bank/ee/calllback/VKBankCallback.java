@@ -157,7 +157,10 @@ public class VKBankCallback {
     public String getVK_T_DATETIME()  {
         return req.getParameter("VK_T_DATETIME");
     }
-    public boolean isUnsuccessful() {
+    public boolean isSuccessful() {
+        return "1012".equals(getVK_SERVICE());
+    }
+    public boolean isUnuccessful() {
         return "1911".equals(getVK_SERVICE());
     }
 

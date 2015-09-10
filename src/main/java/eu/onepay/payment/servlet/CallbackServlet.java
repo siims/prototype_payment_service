@@ -42,15 +42,17 @@ public class CallbackServlet extends HttpServlet {
         PaymentCredential payCrede = getPayCredential(merchantId, paymentId);
         String redirectUri = "";
         if (payCrede instanceof VKBankPayCredentials) {
+            
+            
             VKBankCallback callback = new VKBankCallback(request, (VKBankPayCredentials) payCrede);
             System.out.println("Valid: " + callback.isValid());
-            if (callback.isValid()) {
+            if (callback.isValid() && callback.isSuccessful()) {
                 redirectUri = ((VKBankPayCredentials) payCrede).getReturnUrl();
             } else {
                 redirectUri = ((VKBankPayCredentials) payCrede).getCancelUrl();
             }
 
-            // TODO: DATABASE. Change transaction state in database.
+            // TODO: DATABASE. Change transaction state in database. VKBankCallback.getVK_Stamp - transaction Id.
         }
         return redirectUri;
     }
