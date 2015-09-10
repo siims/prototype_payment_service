@@ -10,11 +10,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import lombok.extern.slf4j.Slf4j;
 import eu.onepay.payment.MerchantCredentials;
 import eu.onepay.payment.PaymentCredential;
 import eu.onepay.payment.bank.ee.VKBankPayCredentials;
 import eu.onepay.payment.bank.ee.calllback.VKBankCallback;
-
+@Slf4j
 public class CallbackServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private ServletContext servCtx;
@@ -45,7 +46,7 @@ public class CallbackServlet extends HttpServlet {
             
             
             VKBankCallback callback = new VKBankCallback(request, (VKBankPayCredentials) payCrede);
-            System.out.println("Valid: " + callback.isValid());
+            log.debug("callback valid = " + callback.isValid() + " and successful = " + callback.isSuccessful());
             if (callback.isValid() && callback.isSuccessful()) {
                 redirectUri = ((VKBankPayCredentials) payCrede).getReturnUrl();
             } else {
@@ -86,9 +87,8 @@ public class CallbackServlet extends HttpServlet {
         if (matcher.find()) {
             retStr = matcher.group(1);
         } else {
-            System.out.println("didn't find");
+            log.info("Didn't find requested string from url");
         }
-        System.out.println(retStr);
         return retStr;
     }
 

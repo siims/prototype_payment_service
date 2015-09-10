@@ -20,15 +20,15 @@ public class ApiServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private ServletContext servCtx;
 
-    public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         servCtx = request.getServletContext();
 
         PaymentRequest payRequest = getRequestAsObject(request);
 
         PayMethod method = PaymentAction.makeTransaction(payRequest, servCtx);
-
-        response.getWriter().write(FormFactory.asForm(method).toString());
+        String retString = "jsonpCallback('"+FormFactory.asForm(method).toString()+ "')";
+        response.getWriter().write(retString);
 
         OurTransaction transaction = method.getTransaction();
         transaction.setTimeSentOut(new Date());
