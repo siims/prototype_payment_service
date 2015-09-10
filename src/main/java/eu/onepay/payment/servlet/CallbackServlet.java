@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import eu.onepay.payment.MerchantCredentials;
 import eu.onepay.payment.PaymentCredential;
-import eu.onepay.payment.bank.ee.VKBankPayCredentials;
+import eu.onepay.payment.bank.ee.VKBankPayCredential;
 import eu.onepay.payment.bank.ee.calllback.VKBankCallback;
 
 public class CallbackServlet extends HttpServlet {
@@ -38,8 +38,8 @@ public class CallbackServlet extends HttpServlet {
         Long merchantId = getMerchantId(request);
         Long paymentId = getPaymentId(request);
         PaymentCredential payCrede = getPayCredential(merchantId, paymentId);
-        if (payCrede instanceof VKBankPayCredentials) {
-            VKBankCallback callback = new VKBankCallback(request, (VKBankPayCredentials) payCrede);
+        if (payCrede instanceof VKBankPayCredential) {
+            VKBankCallback callback = new VKBankCallback(request, (VKBankPayCredential) payCrede);
             System.out.println("Valid: " + callback.isValid());
         }
     }

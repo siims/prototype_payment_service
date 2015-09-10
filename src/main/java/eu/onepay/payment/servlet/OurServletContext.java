@@ -19,17 +19,21 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import eu.onepay.db.data.Merchant;
 import eu.onepay.db.resource.data.MerchantResource;
+import eu.onepay.db.resource.data.PaymentMethodResource;
 import eu.onepay.payment.MerchantCredentials;
 import eu.onepay.payment.PayMethod;
 import eu.onepay.payment.PaymentCredential;
 import eu.onepay.payment.bank.ee.BankEE;
-import eu.onepay.payment.bank.ee.VKBankPayCredentials;
+import eu.onepay.payment.bank.ee.VKBankPayCredential;
 
 @Slf4j
 public class OurServletContext implements ServletContextListener {
 
     @Autowired
     private MerchantResource merchantResource;
+    
+    @Autowired
+    private PaymentMethodResource paymentMethodResource;
 
     @Override
     public void contextDestroyed(ServletContextEvent arg0) {
@@ -49,13 +53,12 @@ public class OurServletContext implements ServletContextListener {
 
         String keyLocation = "/WEB-INF/classes/truststore.ks";
         BankEE.keyLocation = serCtx.getRealPath(keyLocation).toString();
-
-
     }
 
     private void setMerchantCredentials(ServletContext serCtx) {
 
 //        Map<Long, MerchantCredentials> merchantCrede = new HashMap<>();
+
         Map<Long, MerchantCredentials> merchantCrede = merchantResource.listActive().stream()
             .collect(Collectors.toMap(merchant -> merchant.getId(), 
                      merchant -> MerchantCredentials.makeMerchantCredentials(merchant)));
@@ -76,6 +79,8 @@ public class OurServletContext implements ServletContextListener {
     private void setPaymentCredential(ServletContext serCtx) {
 
         // <merchantID <paymentId, PaymentCredential>>
+//        FIXME: serCtx.getAttribute(MerchantCredentials.CONTEXT_KEY).stream().collect(Collectors.toMap(merchant -> merchant.getId(),
+//                merchant -> ));
         Map<Long, Map<Long, PaymentCredential>> merchantPayCredentials = new HashMap<Long, Map<Long, PaymentCredential>>();
         // TODO: connect with some sort of database - document based perhaps
         // get all merchant ID's in a list. And connect with their
@@ -113,11 +118,11 @@ public class OurServletContext implements ServletContextListener {
         String defaultCancelUrl = "http://localhost:8080/pankpayment/";
         String defaultReturnUrl = "http://localhost:8080/pankpayment/callback/23/merchant/1";
 
-        VKBankPayCredentials payCrede = new VKBankPayCredentials(23L, sendersId, returnUrl, cancelUrl, privateKeyAlias,
+        VKBankPayCredential payCrede = new VKBankPayCredential(23L, sendersId, returnUrl, cancelUrl, privateKeyAlias,
                 defaultReturnUrl, defaultCancelUrl, publicKey);
         payCredential.put(payCrede.getPaymentId(), payCrede);
 
-        payCrede = new VKBankPayCredentials(24L, sendersId, returnUrl, cancelUrl, privateKeyAlias, defaultReturnUrl,
+        payCrede = new VKBankPayCredential(24L, sendersId, returnUrl, cancelUrl, privateKeyAlias, defaultReturnUrl,
                 defaultCancelUrl, publicKey);
         payCredential.put(payCrede.getPaymentId(), payCrede);
 

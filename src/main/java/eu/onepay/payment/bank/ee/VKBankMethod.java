@@ -13,7 +13,7 @@ import eu.onepay.payment.PaymentCredential;
 
 public class VKBankMethod extends BankEE {
 
-    private VKBankPayCredentials payCrede;
+    private VKBankPayCredential payCrede;
     private OrderCredentials orderCrede;
     private MerchantCredentials merchCrede;
     private long id;
@@ -34,7 +34,7 @@ public class VKBankMethod extends BankEE {
     private void verify(PaymentCredential payCrede, OrderCredentials orderCrede, MerchantCredentials merchCrede) {
         // TODO: maybe should make deeper verification, check if all fields are
         // here that are needed
-        if (payCrede instanceof VKBankPayCredentials) {
+        if (payCrede instanceof VKBankPayCredential) {
             valid = true;
         } else {
             valid = false;
@@ -42,10 +42,10 @@ public class VKBankMethod extends BankEE {
     }
 
     private void init(PaymentCredential payCrede, OrderCredentials orderCrede, MerchantCredentials merchCrede) {
-        VKBankPayCredentials vkPayCrede = null;
+        VKBankPayCredential vkPayCrede = null;
 
-        if (payCrede instanceof VKBankPayCredentials) {
-            vkPayCrede = (VKBankPayCredentials) payCrede;
+        if (payCrede instanceof VKBankPayCredential) {
+            vkPayCrede = (VKBankPayCredential) payCrede;
         }
 
         this.payCrede = vkPayCrede;

@@ -17,15 +17,15 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
 
 import eu.onepay.payment.bank.ee.BankEE;
-import eu.onepay.payment.bank.ee.VKBankPayCredentials;
+import eu.onepay.payment.bank.ee.VKBankPayCredential;
 
 @Slf4j
 public class VKBankCallback {
 
     private HttpServletRequest req;
-    private VKBankPayCredentials payCrede;
+    private VKBankPayCredential payCrede;
 
-    public VKBankCallback ( HttpServletRequest request, VKBankPayCredentials payCrede ){
+    public VKBankCallback ( HttpServletRequest request, VKBankPayCredential payCrede ){
         req = request;
         this.payCrede = payCrede;
 
