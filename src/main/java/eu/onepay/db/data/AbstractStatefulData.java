@@ -26,7 +26,7 @@ public abstract class AbstractStatefulData extends AbstractData {
     @Column(name = COL_ACTIVE)
     private Boolean active = true;
 
-    @Column(name = COL_MOD_DATE, insertable = false)
+    @Column(name = COL_CREATED_DATE, insertable = false)
     private LocalDate createdDate;
 
     @Column(name = COL_MOD_DATE, insertable = false)

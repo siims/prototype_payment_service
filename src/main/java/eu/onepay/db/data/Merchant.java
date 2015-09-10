@@ -15,7 +15,7 @@ public class Merchant extends AbstractStatefulData {
     
     public static final String COL_COMPANY_ID = "company_id";
 
-    public static final String COL_NAME = "name";
+    public static final String COL_NAME = "normalized_name";
 
 
     public static final String FLD_COMPANY_ID = "companyId";

@@ -9,11 +9,11 @@ public interface MerchantResource extends CRUDResource {
 
     public List<Merchant> listActive();
 
-    public Integer getMerchantId(int companyId, String name);
+    public Long getMerchantId(long companyId, String name);
 
-    public List<Integer> getMerchantIds(int companyId);
+    public List<Long> getMerchantIds(long companyId);
 
-    public boolean deactivateMerchant(int merchantId);
+    public boolean deactivateMerchant(long merchantId);
 
-    public int storeMerchant(Merchant merchant);
+    public long storeMerchant(Merchant merchant);
 }

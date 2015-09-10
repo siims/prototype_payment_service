@@ -28,25 +28,25 @@ public class MerchantResourceImpl extends AbstractResource implements MerchantRe
     }
 
     @Override
-    public Integer getMerchantId(int companyId, String name) {
+    public Long getMerchantId(long companyId, String name) {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public List<Integer> getMerchantIds(int companyId) {
+    public List<Long> getMerchantIds(long companyId) {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public boolean deactivateMerchant(int merchantId) {
+    public boolean deactivateMerchant(long merchantId) {
         // TODO Auto-generated method stub
         return false;
     }
 
     @Override
-    public int storeMerchant(Merchant merchant) {
+    public long storeMerchant(Merchant merchant) {
         // TODO Auto-generated method stub
         return 0;
     }

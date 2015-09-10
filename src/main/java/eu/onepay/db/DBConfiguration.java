@@ -1,10 +1,15 @@
 package eu.onepay.db;
 
+import java.sql.DriverManager;
+import java.sql.SQLException;
+
 import javax.sql.DataSource;
 
 import org.hibernate.SessionFactory;
+import org.postgresql.Driver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
@@ -16,6 +21,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
 @PropertySource("classpath:db.properties")
+@ComponentScan("eu.onepay")
 @EnableTransactionManagement
 public class DBConfiguration {
 
@@ -34,23 +40,23 @@ public class DBConfiguration {
     }
 
     @Bean
-    public SessionFactory dataSessionFactory() {
-        LocalSessionFactoryBuilder sessionFactory = new LocalSessionFactoryBuilder(dataSource());
+    public SessionFactory sessionFactory() {
+        LocalSessionFactoryBuilder builder = new LocalSessionFactoryBuilder(dataSource());
 
-        sessionFactory.scanPackages(env.getProperty("db.data"), "eu.onepay.db.util");
+        builder.scanPackages(env.getProperty("db.data"), "eu.onepay.db.util");
 
-        sessionFactory.setProperty("hibernate.dialect", env.getProperty("db.dialect"));
-        sessionFactory.setProperty("hibernate.jdbc.batch_size", env.getProperty("db.batch.size"));
-        sessionFactory.setProperty("hibernate.show_sql", env.getProperty("db.show.sql"));
-        sessionFactory.setProperty("hibernate.format_sql", env.getProperty("db.format.sql"));
-        sessionFactory.setProperty("hibernate.default_schema", env.getProperty("db.schema"));
+        builder.setProperty("hibernate.dialect", env.getProperty("db.dialect"));
+        builder.setProperty("hibernate.jdbc.batch_size", env.getProperty("db.batch.size"));
+        builder.setProperty("hibernate.show_sql", env.getProperty("db.show.sql"));
+        builder.setProperty("hibernate.format_sql", env.getProperty("db.format.sql"));
+        builder.setProperty("hibernate.default_schema", env.getProperty("db.schema"));
 
-        return sessionFactory.buildSessionFactory();
+        return builder.buildSessionFactory();
     }
 
     @Bean
     public HibernateTransactionManager transactionManager() {
-        return new HibernateTransactionManager(dataSessionFactory());
+        return new HibernateTransactionManager(sessionFactory());
     }
 
     @Bean

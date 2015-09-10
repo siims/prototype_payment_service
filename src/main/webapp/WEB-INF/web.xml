@@ -35,5 +35,10 @@
 			org.springframework.web.context.ContextLoaderListener
 		</listener-class>
 	</listener>
+	<listener>
+		<listener-class>
+			eu.onepay.payment.servlet.OurServletContext
+		</listener-class>
+	</listener>
 
 </web-app>

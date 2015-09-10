@@ -25,14 +25,14 @@ public class CompanyResourceImpl extends AbstractResource implements CompanyReso
     }
 
     @Override
-    public boolean deactivateCompany(int companyId) {
+    public boolean deactivateCompany(long companyId) {
         session().createQuery("UPDATE Company SET active = false WHERE id = :companyId")
-                .setInteger("companyId", companyId).executeUpdate();
+                .setLong("companyId", companyId).executeUpdate();
         return true;
     }
 
     @Override
-    public int storeCompany(Company company) {
+    public long storeCompany(Company company) {
         return store(company);
     }
 }

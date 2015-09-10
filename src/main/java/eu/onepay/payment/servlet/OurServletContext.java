@@ -1,7 +1,6 @@
 package eu.onepay.payment.servlet;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,15 +9,13 @@ import java.util.stream.Collectors;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
-import javax.servlet.annotation.WebListener;
 
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.stereotype.Component;
+import org.springframework.orm.hibernate4.HibernateTransactionManager;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import eu.onepay.db.data.Merchant;
 import eu.onepay.db.resource.data.MerchantResource;
@@ -29,15 +26,10 @@ import eu.onepay.payment.bank.ee.BankEE;
 import eu.onepay.payment.bank.ee.VKBankPayCredentials;
 
 @Slf4j
-@Component
-@WebListener
 public class OurServletContext implements ServletContextListener {
 
     @Autowired
     private MerchantResource merchantResource;
-
-    @Autowired
-    private ApplicationContext applicationContext;
 
     @Override
     public void contextDestroyed(ServletContextEvent arg0) {
@@ -45,6 +37,8 @@ public class OurServletContext implements ServletContextListener {
 
     @Override
     public void contextInitialized(ServletContextEvent event) {
+        WebApplicationContextUtils.getRequiredWebApplicationContext(event.getServletContext())
+        .getAutowireCapableBeanFactory().autowireBean(this);
         ServletContext serCtx = event.getServletContext();
 
         setPaymentMethods(serCtx);
@@ -55,15 +49,13 @@ public class OurServletContext implements ServletContextListener {
 
         String keyLocation = "/WEB-INF/classes/truststore.ks";
         BankEE.keyLocation = serCtx.getRealPath(keyLocation).toString();
+
+
     }
 
     private void setMerchantCredentials(ServletContext serCtx) {
 
 //        Map<Long, MerchantCredentials> merchantCrede = new HashMap<>();
-        // TODO: connect with some sort of database - document based perhaps
-        //
-        log.error("BAAAAAEEE {} {}", merchantResource == null, Arrays.toString(applicationContext.getBeanDefinitionNames()));
-        log.info("FOOOOO: {}", merchantResource.listActive());
         Map<Long, MerchantCredentials> merchantCrede = merchantResource.listActive().stream()
             .collect(Collectors.toMap(merchant -> merchant.getId(), 
                      merchant -> MerchantCredentials.makeMerchantCredentials(merchant)));
@@ -71,7 +63,6 @@ public class OurServletContext implements ServletContextListener {
 //        merchCrede.setMerchantId(1234L);
 //        merchCrede.setName("Human Readable e.g. comapy name");
 //        merchantCrede.put(merchCrede.getMerchantId(), merchCrede);
-
         serCtx.setAttribute(MerchantCredentials.CONTEXT_KEY, merchantCrede);
 
     }
@@ -90,7 +81,7 @@ public class OurServletContext implements ServletContextListener {
         // get all merchant ID's in a list. And connect with their
         // paymentCredentials.
         List<Long> merchants = new ArrayList<>();
-        merchants.add(1234L);
+        merchants.add(1L);
         // TODO: LookUp all merchants who have custom paymentCredentials.
         for (Long merchant : merchants) {
             Map<Long, PaymentCredential> payCredentials = getPayCredentials(merchant);
@@ -120,7 +111,7 @@ public class OurServletContext implements ServletContextListener {
         String publicKey = "-----BEGIN CERTIFICATE-----\nMIIDljCCAn4CCQCBmddvYTNKbTANBgkqhkiG9w0BAQUFADCBjDELMAkGA1UEBhMCRUUxETAPBgNVBAgTCEhhcmp1bWFhMRAwDgYDVQQHEwdUYWxsaW5uMQ0wCwYDVQQKEwRUZXN0MREwDwYDVQQLEwhiYW5rbGluazEXMBUGA1UEAxMObG9jYWxob3N0IDgwODExHTAbBgkqhkiG9w0BCQEWDnRlc3RAbG9jYWxob3N0MB4XDTE1MDgzMTExNDExNVoXDTM1MDgyNjExNDExNVowgYwxCzAJBgNVBAYTAkVFMREwDwYDVQQIEwhIYXJqdW1hYTEQMA4GA1UEBxMHVGFsbGlubjENMAsGA1UEChMEVGVzdDERMA8GA1UECxMIYmFua2xpbmsxFzAVBgNVBAMTDmxvY2FsaG9zdCA4MDgxMR0wGwYJKoZIhvcNAQkBFg50ZXN0QGxvY2FsaG9zdDCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBANfS/2Z5c/1PBveT0RvM/TA162oumn8P7ecG0mfM2FI7i2uAtXlluj0fMLj8Slw6xO2y6SmTLkq31XoO+hDy10gp7OhKZLhyaSS1ueFO1ef/j7gGvbipXhxPS6HToyI06NbaSel206eP+NrbF+DvZ76RY42bkAScN5Y8AGGUdQUX1OPVOgbv7LO+3sUfQNBDMwxy/y+rCI0AHYR0bKtas7h18TS6WpDnj7TZCPTJIX1jUO5pWCvPsi4t3k/yiUAEALEpn//qZhdR+lgP5n0SNo63SWTkpgT+qnJ2vrycLJTJ7I+G/5BPKtMZoKHOohILrqBPP8Bhmrx9hF4UXVlZXYcCAwEAATANBgkqhkiG9w0BAQUFAAOCAQEAwD3Iis24RLRKO6CehOXB31Id4Pe+jz3PyFNJjC4mM7beYcpbDVRX4TMb5BfBiYgK80y417jT1k3Wsi4HwOSkU+bANiKjE0YJRLx8uNCV0XkFv2clz7saJq0OgCqs2+8hxlm6tiDoU3JowVeadCkU4gnzZlaLlviHLVd+zVdwLQM8VPm+0Y5H2stveq0Yj5t2ekvsSxoYiXD1Aga2plZBWUp4bgGVOr1uIkV8IoboVbe6A4D5QBakXAucioizighVv7zJGQ/Ir0HbP02G6AbcerVs4K3mMTkwgAlhFVjJtyAKd0QvA86XQovB9TaGWUcX/zwcOVu9G8/zjpVVxvTdfw==-----END CERTIFICATE-----";
 
         String defaultCancelUrl = "http://localhost:8080/pankpayment/";
-        String defaultReturnUrl = "http://localhost:8080/pankpayment/callback/23/merchant/1234";
+        String defaultReturnUrl = "http://localhost:8080/pankpayment/callback/23/merchant/1";
 
         VKBankPayCredentials payCrede = new VKBankPayCredentials(23L, sendersId, returnUrl, cancelUrl, privateKeyAlias,
                 defaultReturnUrl, defaultCancelUrl, publicKey);

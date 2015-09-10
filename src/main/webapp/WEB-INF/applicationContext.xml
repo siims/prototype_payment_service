@@ -8,8 +8,8 @@
         http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.2.xsd">
 
     <!-- Dependency Injection with annotations -->
-    <mvc:annotation-driven />
-
+    <context:annotation-config />
+    <context:component-scan base-package="eu.onepay" />
 </beans>
 
   

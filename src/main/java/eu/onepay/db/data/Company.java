@@ -29,7 +29,7 @@ public class Company extends AbstractStatefulData {
     @Column(name = COL_REG_CODE)
     private String registrationCode;
 
-    @Column(name = COL_REG_CODE)
+    @Column(name = COL_NAME)
     private String name;
 
     @Column(name = COL_COUNTRY)

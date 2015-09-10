@@ -7,11 +7,11 @@ import eu.onepay.db.data.AbstractData;
 
 public interface CRUDResource {
 
-    public <T> T byId(Class<T> type, int id);
+    public <T> T getById(Class<T> type, long id);
 
     public <T> List<T> list(Class<T> type);
 
-    public <T extends AbstractData> int store(T data);
+    public <T extends AbstractData> long store(T data);
 
-    public <T extends AbstractData> List<Integer> store(List<T> data);
+    public <T extends AbstractData> List<Long> store(List<T> data);
 }

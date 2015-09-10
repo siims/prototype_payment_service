@@ -7,8 +7,8 @@ public interface CompanyResource extends CRUDResource {
 
     public Long companyId(String registrationCode, Integer countryCode);
 
-    public boolean deactivateCompany(int companyId);
+    public boolean deactivateCompany(long companyId);
 
-    public int storeCompany(Company company);
+    public long storeCompany(Company company);
 
 }

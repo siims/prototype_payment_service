@@ -18,9 +18,9 @@ import eu.onepay.db.resource.data.CRUDResource;
 public abstract class AbstractResource implements Resource, CRUDResource {
 
     @Autowired
-    private SessionFactory dataSessionFactory;
+    private SessionFactory sessionFactory;
 
-    public <T> T byId(Class<T> type, int id) {
+    public <T> T getById(Class<T> type, long id) {
         return (T) session().get(type, id);
     }
 
@@ -28,17 +28,17 @@ public abstract class AbstractResource implements Resource, CRUDResource {
         return session().createCriteria(type).list();
     }
 
-    public <T extends AbstractData> List<Integer> store(List<T> data) {
+    public <T extends AbstractData> List<Long> store(List<T> data) {
         return data.stream().map(this::store).collect(Collectors.toList());
     }
 
-    public <T extends AbstractData> int store(T data) {
-        return (int) session().save(data);
+    public <T extends AbstractData> long store(T data) {
+        return (long) session().save(data);
     }
 
     @Override
     public Session session() {
-        return dataSessionFactory.getCurrentSession();
+        return sessionFactory.getCurrentSession();
     }
 
     protected Long getResultRowIdCode(AbstractData queryResult) {
