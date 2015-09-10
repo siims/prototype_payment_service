@@ -140,7 +140,7 @@ public class VKBankMethod extends BankEE {
                 getVK_RETURN(),
                 getVK_CANCEL(),
                 getVK_DATETIME(),
-                }, payCrede.getPrivetKeyAlias(), true);
+                }, payCrede.getPrivateKeyAlias(), true);
         
                 // @formatter:on
 
