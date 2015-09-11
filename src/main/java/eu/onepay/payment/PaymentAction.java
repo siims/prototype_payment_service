@@ -33,7 +33,7 @@ public class PaymentAction {
 
         orderCrede = getOrderCredentials(payRequest);
         merchCrede = getMerchantCredentials(payRequest.merchantId);
-        payCrede = getPaymentCredentials(merchCrede.getMerchantId(), payRequest.paymentId);
+        payCrede = getPaymentCredential(merchCrede.getMerchantId(), payRequest.paymentId);
 
     }
 
@@ -85,14 +85,10 @@ public class PaymentAction {
         return payMethod;
     }
 
-    private PaymentCredential getPaymentCredentials(Long merchantId, Long paymentId) {
+    private PaymentCredential getPaymentCredential(Long merchantId, Long paymentId) {
 
         try {
-            @SuppressWarnings("unchecked")
-            Map<Long, Map<Long, PaymentCredential>> merchantPayMethods = (Map<Long, Map<Long, PaymentCredential>>) servCtx
-                    .getAttribute(PaymentCredential.CREDE_KEY);
-            Map<Long, PaymentCredential> payCredentials = merchantPayMethods.get(merchantId);
-            return payCredentials.get(paymentId);
+            return OurContext.getPaymentCredential(merchantId, paymentId, servCtx);
         } catch (NullPointerException e) {
             e.printStackTrace();
             return null;

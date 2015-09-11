@@ -1,7 +1,6 @@
 package eu.onepay.payment.servlet;
 
 import java.io.IOException;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -12,9 +11,11 @@ import javax.servlet.http.HttpServletResponse;
 
 import lombok.extern.slf4j.Slf4j;
 import eu.onepay.payment.MerchantCredentials;
+import eu.onepay.payment.OurContext;
 import eu.onepay.payment.PaymentCredential;
 import eu.onepay.payment.bank.ee.VKBankPayCredentials;
 import eu.onepay.payment.bank.ee.calllback.VKBankCallback;
+
 @Slf4j
 public class CallbackServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
@@ -43,8 +44,7 @@ public class CallbackServlet extends HttpServlet {
         PaymentCredential payCrede = getPayCredential(merchantId, paymentId);
         String redirectUri = "";
         if (payCrede instanceof VKBankPayCredentials) {
-            
-            
+
             VKBankCallback callback = new VKBankCallback(request, (VKBankPayCredentials) payCrede);
             log.debug("callback valid = " + callback.isValid() + " and successful = " + callback.isSuccessful());
             if (callback.isValid() && callback.isSuccessful()) {
@@ -53,24 +53,14 @@ public class CallbackServlet extends HttpServlet {
                 redirectUri = ((VKBankPayCredentials) payCrede).getCancelUrl();
             }
 
-            // TODO: DATABASE. Change transaction state in database. VKBankCallback.getVK_Stamp - transaction Id.
+            // TODO: DATABASE. Change transaction state in database.
+            // VKBankCallback.getVK_Stamp - transaction Id.
         }
         return redirectUri;
     }
 
     private PaymentCredential getPayCredential(Long merchantId, Long paymentId) {
-
-        try {
-            @SuppressWarnings("unchecked")
-            Map<Long, Map<Long, PaymentCredential>> merchantPayMethods = (Map<Long, Map<Long, PaymentCredential>>) servCtx
-                    .getAttribute(PaymentCredential.CREDE_KEY);
-            Map<Long, PaymentCredential> payCredentials = merchantPayMethods.get(merchantId);
-            return payCredentials.get(paymentId);
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-            return null;
-        }
-
+        return OurContext.getPaymentCredential(merchantId, paymentId, servCtx);
     }
 
     private Long getPaymentId(HttpServletRequest request) {
