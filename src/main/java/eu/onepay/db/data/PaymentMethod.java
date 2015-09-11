@@ -29,11 +29,11 @@ public class PaymentMethod extends AbstractStatefulData {
     public static final String FLD_BANK_ACCOUNT_ID = "bankAccountId";
 
     @Column(name = COL_FIN_SERVICE)
-    private Integer finServiceId;
+    private Long finServiceId;
 
     @Column(name = COL_MERCHANT)
-    private Integer merchantId;
+    private Long merchantId;
 
     @Column(name = COL_BANK_ACCOUNT)
-    private Integer bankAccountId;
+    private Long bankAccountId;
 }
