@@ -16,18 +16,18 @@ public class PaymentAction {
     private MerchantCredentials merchCrede;
     private PaymentCredential payCrede;
 
-    public static PayMethod makeTransaction(PaymentRequest payRequest, ServletContext servCtx) {
+    public static UniqueFinancialService makeTransaction(PaymentRequest payRequest, ServletContext servCtx) {
         PaymentAction paymentAction = new PaymentAction(payRequest, servCtx);
-        PayMethod payMethod = paymentAction.getPayMethod();
+        UniqueFinancialService service = paymentAction.getPayMethod();
         // TODO: DATABASE: Save the payMethod to database
         OurTransaction transaction = new OurTransaction();// =
                                                           // Database.saveAsTransaction(payMethod);
-        payMethod.setTransaction(transaction);
+        service.setTransaction(transaction);
 
-        return payMethod;
+        return service;
     }
 
-    private PaymentAction ( PaymentRequest payRequest, ServletContext servCtx ){
+    private PaymentAction (PaymentRequest payRequest, ServletContext servCtx) {
 
         this.servCtx = servCtx;
 
@@ -37,15 +37,15 @@ public class PaymentAction {
 
     }
 
-    private PayMethod getPayMethod() {
+    private UniqueFinancialService getPayMethod() {
 
-        PayMethod method = getDefaultPaymentMethod(payCrede.getPaymentId());
-        method.initAndVerify(payCrede, orderCrede, merchCrede);
-        if (method.notValid()) {
-            method = NullObject.payMethod();
+        UniqueFinancialService service = getUniqueFinancialService(payCrede.getUniqueFinancialServiceId());
+        service.initAndVerify(payCrede, orderCrede, merchCrede);
+        if (service.notValid()) {
+            service = NullObject.uniqueFinancialService();
         }
 
-        return method;
+        return service;
     }
 
     private MerchantCredentials getMerchantCredentials(Long merchantId) {
@@ -67,15 +67,15 @@ public class PaymentAction {
     }
 
     @SuppressWarnings("rawtypes")
-    private PayMethod getDefaultPaymentMethod(Long paymentId) {
+    private UniqueFinancialService getUniqueFinancialService(Long paymentId) {
         @SuppressWarnings("unchecked")
-        Map<String, Class> payMethods = (Map<String, Class>) servCtx.getAttribute(PayMethod.CONTEXT_KEY);
-        PayMethod payMethod = NullObject.payMethod();
+        Map<String, Class> payMethods = (Map<String, Class>) servCtx.getAttribute(UniqueFinancialService.CONTEXT_KEY);
+        UniqueFinancialService payMethod = NullObject.uniqueFinancialService();
         Class payMethodClass = payMethods.get(paymentId);
 
         try {
             @SuppressWarnings("unchecked")
-            Constructor<? extends PayMethod> constructor = payMethodClass.getConstructor(Long.class);
+            Constructor<? extends UniqueFinancialService> constructor = payMethodClass.getConstructor(Long.class);
             payMethod = constructor.newInstance(paymentId);
             return payMethod;
         } catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException

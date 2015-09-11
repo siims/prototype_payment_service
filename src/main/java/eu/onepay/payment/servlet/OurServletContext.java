@@ -20,7 +20,7 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 import eu.onepay.db.resource.data.MerchantResource;
 import eu.onepay.db.resource.data.PaymentMethodResource;
 import eu.onepay.payment.MerchantCredentials;
-import eu.onepay.payment.PayMethod;
+import eu.onepay.payment.UniqueFinancialService;
 import eu.onepay.payment.PaymentCredential;
 import eu.onepay.payment.PaymentCredentialFactory;
 import eu.onepay.payment.bank.ee.BankEE;
@@ -43,7 +43,7 @@ public class OurServletContext implements ServletContextListener {
                 .getAutowireCapableBeanFactory().autowireBean(this);
         ServletContext serCtx = event.getServletContext();
 
-        setPaymentMethods(serCtx);
+        setUniqueFinancialServices(serCtx);
 
         setMerchantCredentials(serCtx);
 
@@ -89,22 +89,25 @@ public class OurServletContext implements ServletContextListener {
         serCtx.setAttribute(PaymentCredential.CREDE_KEY, merchantPaymentCredentials);
     }
 
-    private void setPaymentMethods(ServletContext serCtx) {
+    /*
+     * 
+     */
+    private void setUniqueFinancialServices(ServletContext serCtx) {
         @SuppressWarnings("rawtypes")
-        Map<Long, Class> payMethods = new HashMap<Long, Class>();
+        Map<Long, Class> uniqueFinancialServices = new HashMap<Long, Class>();
         // TODO: connect with some sort of database - document based perhaps
         // Get payment ID and connect it with required class
         try {
             long paymentId = 23L;
             @SuppressWarnings("unchecked")
-            Class<PayMethod> act = (Class<PayMethod>) Class.forName("eu.onepay.payment.bank.ee.VKBankMethod");
+            Class<UniqueFinancialService> act = (Class<UniqueFinancialService>) Class.forName("eu.onepay.payment.bank.ee.VKBankMethod");
 
-            payMethods.put(paymentId, act);
+            uniqueFinancialServices.put(paymentId, act);
 
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
-        serCtx.setAttribute(PayMethod.CONTEXT_KEY, payMethods);
+        serCtx.setAttribute(UniqueFinancialService.CONTEXT_KEY, uniqueFinancialServices);
 
     }
 }

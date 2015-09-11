@@ -19,9 +19,9 @@ import java.security.cert.CertificateException;
 
 import org.apache.commons.codec.binary.Base64;
 
-import eu.onepay.payment.PayMethod;
+import eu.onepay.payment.UniqueFinancialService;
 
-public abstract class BankEE extends PayMethod{
+public abstract class BankEE extends UniqueFinancialService{
 
     public BankEE ( Long id ){
         super(id);

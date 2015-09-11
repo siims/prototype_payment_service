@@ -1,13 +1,13 @@
 package eu.onepay.payment;
 
 
-public abstract class PayMethod {
-    public static final String CONTEXT_KEY = "paymentMethods";
+public abstract class UniqueFinancialService {
+    public static final String CONTEXT_KEY = "uniqueFinancialService";
     private Long id;
     protected boolean valid;
     private OurTransaction transaction;
 
-    public PayMethod ( Long id ){
+    public UniqueFinancialService ( Long id ){
         this.id = id;
     }
 

@@ -3,12 +3,12 @@ package eu.onepay.payment.html;
 import java.util.HashMap;
 import java.util.Map;
 
-import eu.onepay.payment.PayMethod;
+import eu.onepay.payment.UniqueFinancialService;
 import eu.onepay.payment.bank.ee.VKBankMethod;
 
 public class FormFactory {
 
-    public static Form asForm(PayMethod payMethod) {
+    public static Form asForm(UniqueFinancialService payMethod) {
         Form form = null;
         if (payMethod instanceof VKBankMethod) {
             VKBankMethod vkMethod = (VKBankMethod) payMethod;

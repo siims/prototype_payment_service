@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.gson.Gson;
 
 import eu.onepay.payment.OurTransaction;
-import eu.onepay.payment.PayMethod;
+import eu.onepay.payment.UniqueFinancialService;
 import eu.onepay.payment.PaymentAction;
 import eu.onepay.payment.html.FormFactory;
 
@@ -27,7 +27,7 @@ public class ApiServlet extends HttpServlet {
 
         PaymentRequest payRequest = getRequestAsObject(request);
 
-        PayMethod method = PaymentAction.makeTransaction(payRequest, servCtx);
+        UniqueFinancialService method = PaymentAction.makeTransaction(payRequest, servCtx);
         String retString = "jsonpCallback('"+FormFactory.asForm(method).toString()+ "')";
         response.getWriter().write(retString);
 

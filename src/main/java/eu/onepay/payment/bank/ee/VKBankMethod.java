@@ -51,7 +51,7 @@ public class VKBankMethod extends BankEE {
         this.payCrede = vkPayCrede;
         this.orderCrede = orderCrede;
         this.merchCrede = merchCrede;
-        this.id = payCrede.getPaymentId();
+        this.id = payCrede.getUniqueFinancialServiceId();
     }
 
     public String getVK_RETURN() {
