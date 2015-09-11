@@ -1,6 +1,6 @@
 package eu.onepay.payment.servlet;
 
-import java.util.Map;
+import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -9,22 +9,26 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import lombok.extern.slf4j.Slf4j;
 import eu.onepay.payment.MerchantCredentials;
+import eu.onepay.payment.OurContext;
 import eu.onepay.payment.PaymentCredential;
 import eu.onepay.payment.bank.ee.VKBankPayCredential;
 import eu.onepay.payment.bank.ee.calllback.VKBankCallback;
 
+@Slf4j
 public class CallbackServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private ServletContext servCtx;
     public static final String PAY_CALLBACK = "callback";
 
     public void doPost(HttpServletRequest request, HttpServletResponse response) {
-        System.out.println("post:" + request.getRequestURL());
-        logic(request, response);
-        
-        
-
+        String redirectUrl = logic(request, response);
+        try {
+            response.sendRedirect(redirectUrl);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) {
@@ -33,30 +37,30 @@ public class CallbackServlet extends HttpServlet {
 
     }
 
-    private void logic(HttpServletRequest request, HttpServletResponse response) {
+    private String logic(HttpServletRequest request, HttpServletResponse response) {
         servCtx = request.getServletContext();
         Long merchantId = getMerchantId(request);
         Long paymentId = getPaymentId(request);
         PaymentCredential payCrede = getPayCredential(merchantId, paymentId);
+        String redirectUri = "";
         if (payCrede instanceof VKBankPayCredential) {
+
             VKBankCallback callback = new VKBankCallback(request, (VKBankPayCredential) payCrede);
-            System.out.println("Valid: " + callback.isValid());
+            log.debug("callback valid = " + callback.isValid() + " and successful = " + callback.isSuccessful());
+            if (callback.isValid() && callback.isSuccessful()) {
+                redirectUri = ((VKBankPayCredential) payCrede).getReturnUrl();
+            } else {
+                redirectUri = ((VKBankPayCredential) payCrede).getCancelUrl();
+            }
+
+            // TODO: DATABASE. Change transaction state in database.
+            // VKBankCallback.getVK_Stamp - transaction Id.
         }
+        return redirectUri;
     }
 
     private PaymentCredential getPayCredential(Long merchantId, Long paymentId) {
-
-        try {
-            @SuppressWarnings("unchecked")
-            Map<Long, Map<Long, PaymentCredential>> merchantPayMethods = (Map<Long, Map<Long, PaymentCredential>>) servCtx
-                    .getAttribute(PaymentCredential.CREDE_KEY);
-            Map<Long, PaymentCredential> payCredentials = merchantPayMethods.get(merchantId);
-            return payCredentials.get(paymentId);
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-            return null;
-        }
-
+        return OurContext.getPaymentCredential(merchantId, paymentId, servCtx);
     }
 
     private Long getPaymentId(HttpServletRequest request) {
@@ -72,10 +76,9 @@ public class CallbackServlet extends HttpServlet {
         Matcher matcher = pattern.matcher(requestURL);
         if (matcher.find()) {
             retStr = matcher.group(1);
-        }else{
-            System.out.println("didn't find");
+        } else {
+            log.info("Didn't find requested string from url");
         }
-        System.out.println(retStr);
         return retStr;
     }
 

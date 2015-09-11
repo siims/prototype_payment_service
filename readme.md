@@ -15,7 +15,7 @@ Dependencies:
 Must often do maven update. Haven't researched why.
 
 Estonian pank payments (and some Finlands)
--download http://pangalink.net/ from here test environment.
+-download http://pangalink.net/ from here test environment. (Have to have node.js as well;) )
 
 -Let it run on port 8081.
 
@@ -43,7 +43,9 @@ Now you need to add your key to the truststore.ks.
 
 -Run the command: openssl pkcs12 -export -out eneCert.pkcs12 -in eneCert.pem
 
--Run the command: keytool -v -importkeystore -srckeystore eneCert.pkcs12 -srcstoretype PKCS12 -destkeystore keystore.ks -deststoretype JKS -alias "seb_key"
+-Run the command: keytool -v -importkeystore -srckeystore eneCert.pkcs12 -srcstoretype PKCS12 -destkeystore keystore.ks -deststoretype JKS
+
+-change alias if you wish: keytool -changealias -alias <alias_now> -destalias <new_alias> -keystore truststore.ks
 
 -Run the command: keytool -list -v -keystore truststore.ks
 

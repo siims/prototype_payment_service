@@ -2,7 +2,6 @@ package eu.onepay.payment.servlet;
 
 import java.io.IOException;
 import java.util.Date;
-import java.util.stream.Collectors;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -21,25 +20,24 @@ public class ApiServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private ServletContext servCtx;
 
-    public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         servCtx = request.getServletContext();
-        
+        StringBuffer requestURL = request.getRequestURL();
+
         PaymentRequest payRequest = getRequestAsObject(request);
-        
-        PayMethod method = PaymentAction.makeTransaction(payRequest, servCtx); 
-        
-        response.getWriter().write(FormFactory.asForm(method).toString());
-        
+
+        PayMethod method = PaymentAction.makeTransaction(payRequest, servCtx);
+        String retString = "jsonpCallback('"+FormFactory.asForm(method).toString()+ "')";
+        response.getWriter().write(retString);
+
         OurTransaction transaction = method.getTransaction();
         transaction.setTimeSentOut(new Date());
         TransactionChecker.addToTransactions(transaction);
     }
-    
-    
 
-    private PaymentRequest getRequestAsObject(HttpServletRequest request) throws IOException{
-        String json = request.getReader().lines().collect(Collectors.joining());
+    private PaymentRequest getRequestAsObject(HttpServletRequest request) throws IOException {
+        String json = request.getParameter("json_data");
         Gson gson = new Gson();
         return gson.fromJson(json, PaymentRequest.class);
     }

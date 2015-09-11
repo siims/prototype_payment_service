@@ -2,7 +2,6 @@ package eu.onepay.payment.bank.ee.calllback;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.security.PublicKey;
 import java.security.Signature;
 import java.security.cert.CertificateException;
@@ -11,15 +10,12 @@ import java.security.cert.X509Certificate;
 
 import javax.servlet.http.HttpServletRequest;
 
-import lombok.extern.slf4j.Slf4j;
-
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
 
 import eu.onepay.payment.bank.ee.BankEE;
 import eu.onepay.payment.bank.ee.VKBankPayCredential;
 
-@Slf4j
 public class VKBankCallback {
 
     private HttpServletRequest req;
@@ -33,7 +29,6 @@ public class VKBankCallback {
 
     public PublicKey getKey(String key) throws IOException, CertificateException {
         InputStream inStream = null;
-        System.out.println(key);
         try {
             inStream = IOUtils.toInputStream(key);
             CertificateFactory cf = CertificateFactory.getInstance("X.509");
@@ -44,7 +39,6 @@ public class VKBankCallback {
                 inStream.close();
             }
         }
-
     }
 
     public boolean isValid() {
@@ -88,80 +82,86 @@ public class VKBankCallback {
         return BankEE.generateMac(params);
     }
 
-    private String getVK_SND_NAME() throws UnsupportedEncodingException {
+    private String getVK_SND_NAME()  {
        return req.getParameter("VK_SND_NAME");
     }
 
-    private String getVK_SND_ACC() throws UnsupportedEncodingException {
+    private String getVK_SND_ACC()  {
        return req.getParameter("VK_SND_ACC");
     }
 
-    private String getVK_REC_NAME() throws UnsupportedEncodingException {
+    private String getVK_REC_NAME()  {
        return req.getParameter("VK_REC_NAME");
     }
 
-    private String getVK_REC_ACC() throws UnsupportedEncodingException {
+    private String getVK_REC_ACC()  {
        return req.getParameter("VK_REC_ACC");
     }
 
-    private String getVK_T_NO() throws UnsupportedEncodingException {
+    private String getVK_T_NO()  {
        return req.getParameter("VK_T_NO");
     }
 
-    private String getVK_REC_ID() throws UnsupportedEncodingException {
+    private String getVK_REC_ID()  {
        return req.getParameter("VK_REC_ID");
     }
 
-    private String getVK_MSG() throws UnsupportedEncodingException {
+    private String getVK_MSG()  {
        return req.getParameter("VK_MSG");
     }
 
-    private String getVK_REF() throws UnsupportedEncodingException {
+    private String getVK_REF()  {
         return req.getParameter("VK_REF");
     }
 
-    private String getVK_AMOUNT() throws UnsupportedEncodingException {
+    private String getVK_AMOUNT()  {
        return req.getParameter("VK_AMOUNT");
     }
 
-    public String getVK_RETURN() throws UnsupportedEncodingException {
+    public String getVK_RETURN()  {
        return req.getParameter("VK_RETURN");
     }
 
-    public String getVK_CANCEL() throws UnsupportedEncodingException {
+    public String getVK_CANCEL()  {
        return req.getParameter("VK_CANCEL");
     }
 
-    public String getVK_SND_ID() throws UnsupportedEncodingException {
+    public String getVK_SND_ID()  {
        return req.getParameter("VK_SND_ID");
     }
 
-    public String getVK_CURR() throws UnsupportedEncodingException {
+    public String getVK_CURR()  {
        return req.getParameter("VK_CURR");
     }
 
-    public String getVK_CHARSET() throws UnsupportedEncodingException {
+    public String getVK_CHARSET()  {
        return req.getParameter("VK_CHARSET");
     }
 
-    public String getVK_VERSION() throws UnsupportedEncodingException {
+    public String getVK_VERSION()  {
        return req.getParameter("VK_VERSION");
     }
 
-    public String getVK_SERVICE() throws UnsupportedEncodingException {
+    public String getVK_SERVICE()  {
        return req.getParameter("VK_SERVICE");
     }
 
-    public String getVK_MAC() throws UnsupportedEncodingException {
+    public String getVK_MAC()  {
        return req.getParameter("VK_MAC");
     }
 
-    public String getVK_STAMP() throws UnsupportedEncodingException {
+    public String getVK_STAMP()  {
        return req.getParameter("VK_STAMP");
     }
 
-    public String getVK_T_DATETIME() throws UnsupportedEncodingException {
+    public String getVK_T_DATETIME()  {
         return req.getParameter("VK_T_DATETIME");
+    }
+    public boolean isSuccessful() {
+        return "1111".equals(getVK_SERVICE());
+    }
+    public boolean isUnuccessful() {
+        return "1911".equals(getVK_SERVICE());
     }
 
 }
