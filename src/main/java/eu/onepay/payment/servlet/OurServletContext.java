@@ -14,11 +14,8 @@ import javax.servlet.ServletContextListener;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.orm.hibernate4.HibernateTransactionManager;
-import org.springframework.stereotype.Service;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
-import eu.onepay.db.data.Merchant;
 import eu.onepay.db.resource.data.MerchantResource;
 import eu.onepay.db.resource.data.PaymentMethodResource;
 import eu.onepay.payment.MerchantCredentials;
