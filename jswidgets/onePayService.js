@@ -97,7 +97,7 @@ var onepay = {
 	},
 	getPayMethods: function() {
 		$.ajax({
-			url: "http://localhost:8080/onepay_bankpayment/get/paymethods/merchant/1234",
+			url: "http://localhost:8080/onepay_bankpayment/get/paymethods/merchant/" + this.data.merchant_id,
 			type: "POST",
 			dataType: 'jsonp',
 			jsonpCallback: 'jsonpCallback',
