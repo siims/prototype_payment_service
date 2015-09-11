@@ -20,8 +20,8 @@ public class OurContext {
     }
 
     public static PaymentCredential getPaymentCredential(Long merchantId, Long paymentId, ServletContext servCtx) {
-
-        return OurContext.getPaymentCredential(merchantId, paymentId, servCtx);
+       Map<Long, PaymentCredential> paymentCredentials = OurContext.getPaymentCredentials(servCtx, merchantId);
+        return paymentCredentials.get(paymentId);
 
     }
 

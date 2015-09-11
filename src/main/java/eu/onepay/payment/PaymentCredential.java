@@ -11,5 +11,8 @@ public interface PaymentCredential {
     public static final String CREDE_KEY = "PaymentCredentials";
 
     public Long getPaymentId();
+    public String getImageUrl();
+    public String getName();
+    
 
 }

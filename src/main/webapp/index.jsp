@@ -1,62 +1,12 @@
-<%@ page contentType="text/html; charset=UTF-8" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
 </head>
-
-
 <body>
-index.jsp
-<h2>Payment request</h2>
-
-<button onclick="submitForm()"> send the form to bank</button>
-<br>
-<br>
-<div id="response"></div>
-<button onclick="submitForm()"> send the form to bank</button>
-<script>
-
-function inputLenghtToContentSize(){
-	$("input[NAME^='VK_']").each(function () {
-	    $(this).attr("size", $(this).val().length );
-	});
-}
-
-	var data = {
-			merchant_id: "1234",
-			pay_option: "23",
-			order_id: "12345",
-			amount: "123",
-			reference_no: "12344",
-			explanation: "text text text"
-		
-	}
-	var form;
-	$.ajax({
-		url:"/onepay_bankpayment/pay",
-		method:"POST",
-		processData: false,
-		data: JSON.stringify(data),
-		contentType: "application/javascript; charset=utf-8",
-		success:function(response){
-			$("#response").append($(response));
-			form = jQuery.parseHTML(response);
-			console.log(response);
-			inputLenghtToContentSize();
-		},
-		fail:function(response){
-			console.log("Fail")
-			console.log(response);
-			},
-	})
-	
-	function submitForm() {
-		$(form).appendTo("body").submit();
-		console.log(form);
-	}
-
-</script>
-
+OnePay
 </body>
 </html>

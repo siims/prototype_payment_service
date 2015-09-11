@@ -23,6 +23,7 @@ public class ApiServlet extends HttpServlet {
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         servCtx = request.getServletContext();
+        StringBuffer requestURL = request.getRequestURL();
 
         PaymentRequest payRequest = getRequestAsObject(request);
 

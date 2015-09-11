@@ -22,6 +22,10 @@
 		<servlet-name>PaymentCallback</servlet-name>
 		<servlet-class>eu.onepay.payment.servlet.CallbackServlet</servlet-class>
 	</servlet>
+	<servlet>
+		<servlet-name>PaymentMethods</servlet-name>
+		<servlet-class>eu.onepay.payment.servlet.PayMethodsServlet</servlet-class>
+	</servlet>
 
 
 	<servlet-mapping>
@@ -31,6 +35,10 @@
 	<servlet-mapping>
 		<servlet-name>PaymentCallback</servlet-name>
 		<url-pattern>/callback/*</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>PaymentMethods</servlet-name>
+		<url-pattern>/get/paymethods/*</url-pattern>
 	</servlet-mapping>
 
 

@@ -7,21 +7,24 @@ import eu.onepay.payment.PaymentCredential;
 public class VKBankPayCredentials implements PaymentCredential {
 
     private Long paymentId;
-    // Id with the bank
-    private String sendersId;
-    private String returnUrl;
-    private String cancelUrl;
-    private String version = "008";
-    private String service = "1012";
-    private String currency = "EUR";
-    private String encoding = "UTF-8";
-    private String privateKeyAlias;
-    private String defaultReturnUrl;
-    private String defaultCancelUrl;
-    private String publicKey;
-    
+    private String imageUrl = "http://www.seb.ee/sites/default/files/web/images/logod/seb_88x31.gif";
+    private String bankName;
+    private transient String sendersId;
+    private transient String returnUrl;
+    private transient String cancelUrl;
+    private transient String version = "008";
+    private transient String service = "1012";
+    private transient String currency = "EUR";
+    private transient String encoding = "UTF-8";
+    private transient String privateKeyAlias;
+    private transient String defaultReturnUrl;
+    private transient String defaultCancelUrl;
+    private transient String publicKey;
+
+    //TODO: Image and bankName as constructor arg
     public VKBankPayCredentials ( Long paymentId, String sendersId, String returnUrl, String cancelUrl,
-            String privateKeyAlias, String defaultReturnUrl, String defaultCancelUrl, String publicKey ) throws MalformedURLException{
+            String privateKeyAlias, String defaultReturnUrl, String defaultCancelUrl, String publicKey )
+            throws MalformedURLException{
         this.paymentId = paymentId;
         this.sendersId = sendersId;
         this.returnUrl = veryfyUrl(returnUrl);
@@ -34,12 +37,11 @@ public class VKBankPayCredentials implements PaymentCredential {
     }
 
     private String veryfyUrl(String url) throws MalformedURLException {
-        // TODO Auto-generated method stub
         boolean startsWith = url.startsWith("http://");
-        if(startsWith){
+        if (startsWith) {
             return url;
-        }else{
-            throw new MalformedURLException("URL:"+url+" but should start with: http://");
+        } else {
+            throw new MalformedURLException("URL:" + url + " but should start with: http://");
         }
     }
 
@@ -91,6 +93,16 @@ public class VKBankPayCredentials implements PaymentCredential {
 
     public String getPublicKey() {
         return publicKey;
+    }
+
+    @Override
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    @Override
+    public String getName() {
+        return bankName;
     }
 
 }
