@@ -8,12 +8,27 @@
 <body>
 <h2>Payment request</h2>
 
+<script type="text/javascript">
+		onepay.add("merchant_id","1234");
+		onepay.add("pay_option","23");
+		onepay.add("order_id","12345");
+		onepay.add("amount","123");
+		onepay.add("reference_no","12344");
+		onepay.add("explanation","text text text");
+</script>
+
+
+<ul style="float:left; width:20%; overflow:scroll;" id="paymethods" >
+
+</ul>
+
+<div style="float:right; width:50%; overflow:scroll;">
 <button onclick="submitForm()"> send the form to bank</button>
 <br>
 <br>
 <div id="response"></div>
 <button onclick="submitForm()"> send the form to bank</button>
-
+</div>
 
 
 </body>
