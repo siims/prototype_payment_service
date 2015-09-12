@@ -1,8 +1,18 @@
 Onepay backend repository
 
+This project consists of several sql scripts that are able to drop/create/clean tables and sequences.
+
+For basic testset run scripts in order:
+1) create_classifiers_tbl_and_seq.sql
+2) create_data_tbl_and_seq.sql
+3) populate_with_basic_test_data.sql
+
+Dependencies:
+* postgresql 9.3
 
 
-* Setting up postgres on local machine
+
+** Setting up postgres on local linux machine **
 
 Switch to user postgres (sudo su postgres) and create a new user with password authentication option.
 $ createuser --interactive -P onepay

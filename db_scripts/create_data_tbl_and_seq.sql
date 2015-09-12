@@ -14,12 +14,18 @@ DROP TABLE IF EXISTS "data"."fee";
 DROP SEQUENCE IF EXISTS "data"."fee_id_seq";
 DROP TABLE IF EXISTS "data"."payment_method";
 DROP SEQUENCE IF EXISTS "data"."payment_method_id_seq";
-DROP TABLE IF EXISTS "data"."crypt_key";
-DROP SEQUENCE IF EXISTS "data"."crypt_key_id_seq";
+DROP TABLE IF EXISTS "data"."merchant_crypt_key";
+DROP SEQUENCE IF EXISTS "data"."merchant_crypt_key_id_seq";
+DROP TABLE IF EXISTS "data"."fin_service_pub_key";
+DROP SEQUENCE IF EXISTS "data"."fin_service_pub_key_id_seq";
+DROP TABLE IF EXISTS "data"."fin_service_image";
+DROP SEQUENCE IF EXISTS "data"."fin_service_image_id_seq";
+DROP TABLE IF EXISTS "data"."merchant_url";
+DROP SEQUENCE IF EXISTS "data"."merchant_url_id_seq";
 DROP TABLE IF EXISTS "data"."bank_account";
 DROP SEQUENCE IF EXISTS "data"."bank_account_id_seq";
-DROP TABLE IF EXISTS "data"."other_fin_service_to_our";
-DROP SEQUENCE IF EXISTS "data"."other_fin_service_to_our_id_seq";
+DROP TABLE IF EXISTS "data"."unique_fin_service";
+DROP SEQUENCE IF EXISTS "data"."unique_fin_service_id_seq";
 DROP TABLE IF EXISTS "data"."fin_service";
 DROP SEQUENCE IF EXISTS "data"."fin_service_id_seq";
 DROP TABLE IF EXISTS "data"."fin_company";
@@ -240,11 +246,11 @@ ALTER TABLE "data"."fin_service" ADD FOREIGN KEY ("fin_service_type_id") REFEREN
 
 
 ----------------------------------------------------------------------
-------------------------- other_fin_service_to_our -------------------
+------------------------- unique_fin_service -------------------------
 ----------------------------------------------------------------------
 
 -- Sequence structure
-CREATE SEQUENCE "data"."other_fin_service_to_our_id_seq"
+CREATE SEQUENCE "data"."unique_fin_service_id_seq"
   INCREMENT 1
   MINVALUE 1
   MAXVALUE 9223372036854775807
@@ -252,8 +258,8 @@ CREATE SEQUENCE "data"."other_fin_service_to_our_id_seq"
   CACHE 1;
 
 -- Table structure
-CREATE TABLE "data"."other_fin_service_to_our" (
-  "id" int8 DEFAULT nextval('"data".other_fin_service_to_our_id_seq'::regclass) NOT NULL,
+CREATE TABLE "data"."unique_fin_service" (
+  "id" int8 DEFAULT nextval('"data".unique_fin_service_id_seq'::regclass) NOT NULL,
   "other_fin_service_id" int8,
   "our_alternative_fin_service_id" int8,
   "valid_till_date" timestamp(6),
@@ -264,14 +270,14 @@ CREATE TABLE "data"."other_fin_service_to_our" (
 WITH (OIDS=FALSE);
 
 -- Primary Key structure
-ALTER TABLE "data"."other_fin_service_to_our" ADD PRIMARY KEY ("id");
+ALTER TABLE "data"."unique_fin_service" ADD PRIMARY KEY ("id");
 
 -- Uniques structure
-ALTER TABLE "data"."other_fin_service_to_our" ADD UNIQUE ("other_fin_service_id", "our_alternative_fin_service_id"); -- TODO: non overlapping period
+ALTER TABLE "data"."unique_fin_service" ADD UNIQUE ("other_fin_service_id", "our_alternative_fin_service_id"); -- TODO: non overlapping period
 
 -- Foreign Key structure
-ALTER TABLE "data"."other_fin_service_to_our" ADD FOREIGN KEY ("other_fin_service_id") REFERENCES "data"."fin_service" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
-ALTER TABLE "data"."other_fin_service_to_our" ADD FOREIGN KEY ("our_alternative_fin_service_id") REFERENCES "data"."fin_service" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE "data"."unique_fin_service" ADD FOREIGN KEY ("other_fin_service_id") REFERENCES "data"."fin_service" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE "data"."unique_fin_service" ADD FOREIGN KEY ("our_alternative_fin_service_id") REFERENCES "data"."fin_service" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 
 ----------------------------------------------------------------------
@@ -311,11 +317,11 @@ ALTER TABLE "data"."bank_account" ADD FOREIGN KEY ("currency_id") REFERENCES "da
 ALTER TABLE "data"."bank_account" ADD FOREIGN KEY ("fin_company_id") REFERENCES "data"."fin_company" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 ----------------------------------------------------------------------
-------------------------- crypt_key ----------------------------------
+------------------------- merchant_crypt_key -------------------------
 ----------------------------------------------------------------------
 
 -- Sequence structure
-CREATE SEQUENCE "data"."crypt_key_id_seq"
+CREATE SEQUENCE "data"."merchant_crypt_key_id_seq"
   INCREMENT 1
   MINVALUE 1
   MAXVALUE 9223372036854775807
@@ -323,9 +329,9 @@ CREATE SEQUENCE "data"."crypt_key_id_seq"
   CACHE 1;
 
 -- Table structure
-CREATE TABLE "data"."crypt_key" (
-  "id" int8 DEFAULT nextval('"data".crypt_key_id_seq'::regclass) NOT NULL,
-  "company_id" int8,
+CREATE TABLE "data"."merchant_crypt_key" (
+  "id" int8 DEFAULT nextval('"data".merchant_crypt_key_id_seq'::regclass) NOT NULL,
+  "merchant_id" int8,
   "key_alias" varchar(50) COLLATE "default" NOT NULL,
   "active" bool DEFAULT true NOT NULL,
   "created_date" timestamp(6) DEFAULT now() NOT NULL,
@@ -334,13 +340,114 @@ CREATE TABLE "data"."crypt_key" (
 WITH (OIDS=FALSE);
 
 -- Primary Key structure
-ALTER TABLE "data"."crypt_key" ADD PRIMARY KEY ("id");
+ALTER TABLE "data"."merchant_crypt_key" ADD PRIMARY KEY ("id");
 
 -- Uniques structure
-ALTER TABLE "data"."crypt_key" ADD UNIQUE ("company_id", "key_alias");
+ALTER TABLE "data"."merchant_crypt_key" ADD UNIQUE ("merchant_id", "key_alias");
 
 -- Foreign Key structure
-ALTER TABLE "data"."crypt_key" ADD FOREIGN KEY ("company_id") REFERENCES "data"."company" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE "data"."merchant_crypt_key" ADD FOREIGN KEY ("merchant_id") REFERENCES "data"."merchant" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+
+----------------------------------------------------------------------
+------------------------- fin_service_pub_key ------------------------
+----------------------------------------------------------------------
+
+-- Sequence structure
+CREATE SEQUENCE "data"."fin_service_pub_key_id_seq"
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 1
+  CACHE 1;
+
+-- Table structure
+CREATE TABLE "data"."fin_service_pub_key" (
+  "id" int8 DEFAULT nextval('"data".fin_service_pub_key_id_seq'::regclass) NOT NULL,
+  "fin_company_id" int8,
+  "pub_key" text COLLATE "default" NOT NULL,
+  "active" bool DEFAULT true NOT NULL,
+  "created_date" timestamp(6) DEFAULT now() NOT NULL,
+  "modified_date" timestamp(6) DEFAULT now() NOT NULL
+)
+WITH (OIDS=FALSE);
+
+-- Primary Key structure
+ALTER TABLE "data"."fin_service_pub_key" ADD PRIMARY KEY ("id");
+
+-- Uniques structure
+ALTER TABLE "data"."fin_service_pub_key" ADD UNIQUE ("fin_company_id", "pub_key");
+
+-- Foreign Key structure
+ALTER TABLE "data"."fin_service_pub_key" ADD FOREIGN KEY ("fin_company_id") REFERENCES "data"."fin_company" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+
+----------------------------------------------------------------------
+------------------------- fin_service_image --------------------------
+----------------------------------------------------------------------
+
+-- Sequence structure
+CREATE SEQUENCE "data"."fin_service_image_id_seq"
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 1
+  CACHE 1;
+
+-- Table structure
+CREATE TABLE "data"."fin_service_image" (
+  "id" int8 DEFAULT nextval('"data".fin_service_image_id_seq'::regclass) NOT NULL,
+  "fin_service_id" int8,
+  "image_url" text COLLATE "default" NOT NULL,
+  "description" varchar(1000) COLLATE "default",
+  "active" bool DEFAULT true NOT NULL,
+  "created_date" timestamp(6) DEFAULT now() NOT NULL,
+  "modified_date" timestamp(6) DEFAULT now() NOT NULL
+)
+WITH (OIDS=FALSE);
+
+-- Primary Key structure
+ALTER TABLE "data"."fin_service_image" ADD PRIMARY KEY ("id");
+
+-- Uniques structure
+ALTER TABLE "data"."fin_service_image" ADD UNIQUE ("fin_service_id", "image_url");
+
+-- Foreign Key structure
+ALTER TABLE "data"."fin_service_image" ADD FOREIGN KEY ("fin_service_id") REFERENCES "data"."fin_service" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+
+----------------------------------------------------------------------
+------------------------- merchant_url -------------------------------
+----------------------------------------------------------------------
+
+-- Sequence structure
+CREATE SEQUENCE "data"."merchant_url_id_seq"
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 1
+  CACHE 1;
+
+-- Table structure
+CREATE TABLE "data"."merchant_url" (
+  "id" int8 DEFAULT nextval('"data".merchant_url_id_seq'::regclass) NOT NULL,
+  "merchant_id" int8,
+  "url" text COLLATE "default" NOT NULL,
+  "description" varchar(1000) COLLATE "default",
+  "active" bool DEFAULT true NOT NULL,
+  "created_date" timestamp(6) DEFAULT now() NOT NULL,
+  "modified_date" timestamp(6) DEFAULT now() NOT NULL
+)
+WITH (OIDS=FALSE);
+
+-- Primary Key structure
+ALTER TABLE "data"."merchant_url" ADD PRIMARY KEY ("id");
+
+-- Uniques structure
+ALTER TABLE "data"."merchant_url" ADD UNIQUE ("merchant_id", "url");
+
+-- Foreign Key structure
+ALTER TABLE "data"."merchant_url" ADD FOREIGN KEY ("merchant_id") REFERENCES "data"."merchant" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 
 ----------------------------------------------------------------------
@@ -362,11 +469,15 @@ CREATE TABLE "data"."payment_method" (
   "merchant_id" int8,
   "receiving_bank_account_id" int8,
   "name" varchar(50) COLLATE "default",
-  "fin_company_service_key_id" int8,
-  "company_key_id" int8,
+  "fin_service_pub_key_id" int8,
+  "merchant_crypt_key_id" int8,
   "contact_name_id" int4,
   "contact_phone_id" int4,
   "contact_email_id" int4,
+  "sender_id_in_fin_service" varchar(50) COLLATE "default",
+  "success_url_id" int8,
+  "failure_url_id" int8,
+  "fin_service_image_id" int8,
   "active" bool DEFAULT true NOT NULL,
   "created_date" timestamp(6) DEFAULT now() NOT NULL,
   "modified_date" timestamp(6) DEFAULT now() NOT NULL
@@ -383,12 +494,14 @@ ALTER TABLE "data"."payment_method" ADD UNIQUE ("fin_service_id", "merchant_id",
 ALTER TABLE "data"."payment_method" ADD FOREIGN KEY ("fin_service_id") REFERENCES "data"."fin_service" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
 ALTER TABLE "data"."payment_method" ADD FOREIGN KEY ("merchant_id") REFERENCES "data"."merchant" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
 ALTER TABLE "data"."payment_method" ADD FOREIGN KEY ("receiving_bank_account_id") REFERENCES "data"."bank_account" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION; -- FIXME
-ALTER TABLE "data"."payment_method" ADD FOREIGN KEY ("fin_company_service_key_id") REFERENCES "data"."crypt_key" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
-ALTER TABLE "data"."payment_method" ADD FOREIGN KEY ("company_key_id") REFERENCES "data"."crypt_key" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE "data"."payment_method" ADD FOREIGN KEY ("fin_service_pub_key_id") REFERENCES "data"."fin_service_pub_key" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE "data"."payment_method" ADD FOREIGN KEY ("merchant_crypt_key_id") REFERENCES "data"."merchant_crypt_key" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
 ALTER TABLE "data"."payment_method" ADD FOREIGN KEY ("contact_name_id") REFERENCES "data"."contact" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
 ALTER TABLE "data"."payment_method" ADD FOREIGN KEY ("contact_phone_id") REFERENCES "data"."contact" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
 ALTER TABLE "data"."payment_method" ADD FOREIGN KEY ("contact_email_id") REFERENCES "data"."contact" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
-
+ALTER TABLE "data"."payment_method" ADD FOREIGN KEY ("success_url_id") REFERENCES "data"."merchant_url" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE "data"."payment_method" ADD FOREIGN KEY ("failure_url_id") REFERENCES "data"."merchant_url" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE "data"."payment_method" ADD FOREIGN KEY ("fin_service_image_id") REFERENCES "data"."fin_service_image" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 ----------------------------------------------------------------------
 ------------------------- fee ---------------------------------------
