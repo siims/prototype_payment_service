@@ -33,7 +33,7 @@ public class Company extends AbstractStatefulData {
     private String name;
 
     @Column(name = COL_COUNTRY)
-    private Integer countryId;
+    private Long countryId;
 
     public Company() {}
 

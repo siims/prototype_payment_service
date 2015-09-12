@@ -27,12 +27,12 @@ public class FinService extends AbstractStatefulData {
     public static final String FLD_TYPE_ID = "typeId";
 
     @Column(name = COL_FIN_COMPANY)
-    private Integer finCompanyId;
+    private Long finCompanyId;
 
     @Column(name = COL_NAME)
     private String name;
 
     @Column(name = COL_TYPE)
-    private Integer typeId;
+    private Long typeId;
 
 }

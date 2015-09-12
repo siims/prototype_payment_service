@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import eu.onepay.db.data.AbstractData;
 import eu.onepay.db.data.AbstractStatefulData;
+import eu.onepay.db.data.Company;
 import eu.onepay.db.data.Merchant;
 import eu.onepay.db.resource.data.MerchantResource;
 
@@ -50,5 +51,4 @@ public class MerchantResourceImpl extends AbstractResource implements MerchantRe
         // TODO Auto-generated method stub
         return 0;
     }
-
 }

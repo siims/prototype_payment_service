@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import eu.onepay.db.data.AbstractData;
+import eu.onepay.db.data.FinServiceImage;
 import eu.onepay.db.resource.Resource;
 import eu.onepay.db.resource.data.CRUDResource;
 

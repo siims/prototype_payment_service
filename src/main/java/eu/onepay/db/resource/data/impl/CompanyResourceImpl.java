@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import eu.onepay.db.data.Company;
+import eu.onepay.db.data.FinServiceImage;
 import eu.onepay.db.resource.data.CompanyResource;
 
 @Slf4j

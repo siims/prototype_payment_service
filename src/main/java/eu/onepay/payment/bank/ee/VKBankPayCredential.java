@@ -1,16 +1,18 @@
 package eu.onepay.payment.bank.ee;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import eu.onepay.payment.PaymentCredential;
 
 @RequiredArgsConstructor
+@NoArgsConstructor
 public class VKBankPayCredential implements PaymentCredential {
     // @formatter:off
     @Getter @NonNull private Long uniqueFinancialServiceId;
-    @Getter @NonNull private String imageUrl = "http://www.seb.ee/sites/default/files/web/images/logod/seb_88x31.gif";
-    private String bankName;
+    @Getter @NonNull private String imageUrl;
+    @NonNull private String bankName;
     @Getter @NonNull private transient String sendersId;
     @Getter @NonNull private transient String returnUrl;
     @Getter @NonNull private transient String cancelUrl;

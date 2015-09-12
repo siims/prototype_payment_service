@@ -26,6 +26,6 @@ public class Merchant extends AbstractStatefulData {
     private String name;
 
     @Column(name = COL_COMPANY_ID)
-    private Integer companyId;
+    private Long companyId;
 
 }

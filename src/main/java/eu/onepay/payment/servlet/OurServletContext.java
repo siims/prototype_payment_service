@@ -29,6 +29,8 @@ import eu.onepay.payment.bank.ee.VKBankPayCredential;
 @Slf4j
 public class OurServletContext implements ServletContextListener {
 
+    @Autowired private PaymentCredentialFactory paymentCredentialFactory;
+    
     @Autowired private MerchantResource merchantResource;
 
     @Autowired private PaymentMethodResource paymentMethodResource;
@@ -80,10 +82,8 @@ public class OurServletContext implements ServletContextListener {
                 .getAttribute(MerchantCredentials.CONTEXT_KEY);
 
         Map<Long, Map<Long, PaymentCredential>> merchantPaymentCredentials = new HashMap<Long, Map<Long, PaymentCredential>>();
-        for (Entry<Long, MerchantCredentials> entry : merchantCredentials.entrySet()) {
-            Long merchantId = entry.getKey();
-            MerchantCredentials merchantCredential = entry.getValue();
-            merchantPaymentCredentials.put(merchantId, PaymentCredentialFactory
+        for (Long merchantId : merchantCredentials.keySet()) {
+            merchantPaymentCredentials.put(merchantId, paymentCredentialFactory
                     .makePaymentCredentialMap(paymentMethodResource.getMerchantPaymentMethods(merchantId)));
         }
         serCtx.setAttribute(PaymentCredential.CREDE_KEY, merchantPaymentCredentials);
@@ -107,6 +107,7 @@ public class OurServletContext implements ServletContextListener {
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
+        // TODO: make it a spring bean
         serCtx.setAttribute(UniqueFinancialService.CONTEXT_KEY, uniqueFinancialServices);
 
     }
