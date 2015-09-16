@@ -62,10 +62,6 @@ public class PaymentCredentialFactory {
                                         "http://localhost:8080/onepay_bankpayment/callback/%d/merchant/%d",
                                         uniqueFinServiceId, paymentMethod.getMerchantId()));
                                 String defaultReturnUrl = veryfyUrl(defaultCancelUrl);
-//                                new VKBankPayCredential(uniqueFinServiceId, imageUrl, bankName, sendersId,
-//                                        returnUrl, cancelUrl,
-//                                        currency, privateKeyAlias, defaultReturnUrl, defaultReturnUrl);
-//                                return null;
                                 return new VKBankPayCredential(uniqueFinServiceId, imageUrl, sendersId,
                                         returnUrl, cancelUrl,
                                         currency, privateKeyAlias,
