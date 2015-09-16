@@ -1,9 +1,7 @@
-package eu.onepay.db;
+package eu.onepay.payment;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import eu.onepay.payment.PaymentCredentialFactory;
 
 
 @Configuration
