@@ -1,10 +1,10 @@
 package eu.onepay.payment;
 
+import java.net.MalformedURLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import java.net.MalformedURLException;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import eu.onepay.db.data.PaymentMethod;
-import eu.onepay.db.data.UniqueFinService;
 import eu.onepay.db.resource.data.FinServiceImageResource;
 import eu.onepay.db.resource.data.FinServicePubKeyResource;
 import eu.onepay.db.resource.data.MerchantCryptKeyResource;

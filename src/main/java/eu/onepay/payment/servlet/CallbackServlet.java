@@ -5,6 +5,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.servlet.ServletContext;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -17,6 +18,7 @@ import eu.onepay.payment.bank.ee.VKBankPayCredential;
 import eu.onepay.payment.bank.ee.calllback.VKBankCallback;
 
 @Slf4j
+@WebServlet("/callback/*")
 public class CallbackServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private ServletContext servCtx;

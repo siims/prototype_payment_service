@@ -1,6 +1,5 @@
 package eu.onepay.payment;
 
-import java.util.Map;
 
 /**
  * Holds the logic to make the payment

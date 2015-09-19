@@ -6,6 +6,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.servlet.ServletContext;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -18,6 +19,7 @@ import eu.onepay.payment.MerchantCredentials;
 import eu.onepay.payment.OurContext;
 import eu.onepay.payment.PaymentCredential;
 @Slf4j
+@WebServlet("/get/paymethods/*")
 public class PayMethodsServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private ServletContext servCtx;

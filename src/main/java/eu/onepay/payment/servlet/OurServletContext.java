@@ -1,11 +1,7 @@
 package eu.onepay.payment.servlet;
 
-import java.net.MalformedURLException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
 import javax.servlet.ServletContext;
@@ -20,11 +16,10 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 import eu.onepay.db.resource.data.MerchantResource;
 import eu.onepay.db.resource.data.PaymentMethodResource;
 import eu.onepay.payment.MerchantCredentials;
-import eu.onepay.payment.PaymentSolution;
 import eu.onepay.payment.PaymentCredential;
 import eu.onepay.payment.PaymentCredentialFactory;
+import eu.onepay.payment.PaymentSolution;
 import eu.onepay.payment.bank.ee.BankEE;
-import eu.onepay.payment.bank.ee.VKBankPayCredential;
 
 @Slf4j
 public class OurServletContext implements ServletContextListener {
