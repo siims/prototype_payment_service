@@ -5,7 +5,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
-import eu.onepay.payment.OurTransaction;
+import eu.onepay.payment.PaymentTransaction;
 
 public class TransactionChecker {
 
@@ -16,9 +16,9 @@ public class TransactionChecker {
     private TransactionChecker ( ){
     }
 
-    private static LinkedBlockingQueue<OurTransaction> queue = new LinkedBlockingQueue <OurTransaction>();
+    private static LinkedBlockingQueue<PaymentTransaction> queue = new LinkedBlockingQueue <PaymentTransaction>();
 
-    public static void addToTransactions(OurTransaction transaction) {
+    public static void addToTransactions(PaymentTransaction transaction) {
 
         queue.add(transaction);
 
@@ -40,7 +40,7 @@ public class TransactionChecker {
             try {
                 while (queue.isEmpty() == false) {
 
-                    OurTransaction peek = queue.peek();
+                    PaymentTransaction peek = queue.peek();
                     Date time = peek.timeSentOut();
                     Date now = new Date();
 

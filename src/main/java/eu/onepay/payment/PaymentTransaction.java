@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.AccessLevel;
 @Data
-public class OurTransaction {
+public class PaymentTransaction {
     private Long id = 0L;
     @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
@@ -19,5 +19,8 @@ public class OurTransaction {
     }
     public void setTimeSentOut(Date date) {
         this.date = date;
+    }
+    public PaymentTransaction ( PaymentSolution solution ){
+        timeToWait = solution.getTimeout();
     }
 }

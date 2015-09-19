@@ -1,10 +1,12 @@
 package eu.onepay.payment;
 
+import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 
 import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletResponse;
 
 import eu.onepay.payment.servlet.NullObject;
 import eu.onepay.payment.servlet.PaymentRequest;
@@ -16,18 +18,15 @@ public class PaymentAction {
     private MerchantCredentials merchCrede;
     private PaymentCredential payCrede;
 
-    public static UniqueFinancialService makeTransaction(PaymentRequest payRequest, ServletContext servCtx) {
+    public static PaymentTransaction makeTransaction(PaymentRequest payRequest, ServletContext servCtx,
+            HttpServletResponse response) throws IOException {
         PaymentAction paymentAction = new PaymentAction(payRequest, servCtx);
-        UniqueFinancialService service = paymentAction.getPayMethod();
-        // TODO: DATABASE: Save the payMethod to database
-        OurTransaction transaction = new OurTransaction();// =
-                                                          // Database.saveAsTransaction(payMethod);
-        service.setTransaction(transaction);
+        PaymentSolution solution = paymentAction.getPaymentSolution();
 
-        return service;
+        return solution.execute(response);
     }
 
-    private PaymentAction (PaymentRequest payRequest, ServletContext servCtx) {
+    private PaymentAction ( PaymentRequest payRequest, ServletContext servCtx ){
 
         this.servCtx = servCtx;
 
@@ -37,9 +36,9 @@ public class PaymentAction {
 
     }
 
-    private UniqueFinancialService getPayMethod() {
+    private PaymentSolution getPaymentSolution() {
 
-        UniqueFinancialService service = getUniqueFinancialService(payCrede.getUniqueFinancialServiceId());
+        PaymentSolution service = getUniqueFinancialService(payCrede.getUniqueFinancialServiceId());
         service.initAndVerify(payCrede, orderCrede, merchCrede);
         if (service.notValid()) {
             service = NullObject.uniqueFinancialService();
@@ -67,15 +66,15 @@ public class PaymentAction {
     }
 
     @SuppressWarnings("rawtypes")
-    private UniqueFinancialService getUniqueFinancialService(Long paymentId) {
+    private PaymentSolution getUniqueFinancialService(Long paymentId) {
         @SuppressWarnings("unchecked")
-        Map<String, Class> payMethods = (Map<String, Class>) servCtx.getAttribute(UniqueFinancialService.CONTEXT_KEY);
-        UniqueFinancialService payMethod = NullObject.uniqueFinancialService();
+        Map<String, Class> payMethods = (Map<String, Class>) servCtx.getAttribute(PaymentSolution.CONTEXT_KEY);
+        PaymentSolution payMethod = NullObject.uniqueFinancialService();
         Class payMethodClass = payMethods.get(paymentId);
 
         try {
             @SuppressWarnings("unchecked")
-            Constructor<? extends UniqueFinancialService> constructor = payMethodClass.getConstructor(Long.class);
+            Constructor<? extends PaymentSolution> constructor = payMethodClass.getConstructor(Long.class);
             payMethod = constructor.newInstance(paymentId);
             return payMethod;
         } catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException

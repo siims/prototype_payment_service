@@ -20,7 +20,7 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 import eu.onepay.db.resource.data.MerchantResource;
 import eu.onepay.db.resource.data.PaymentMethodResource;
 import eu.onepay.payment.MerchantCredentials;
-import eu.onepay.payment.UniqueFinancialService;
+import eu.onepay.payment.PaymentSolution;
 import eu.onepay.payment.PaymentCredential;
 import eu.onepay.payment.PaymentCredentialFactory;
 import eu.onepay.payment.bank.ee.BankEE;
@@ -100,7 +100,7 @@ public class OurServletContext implements ServletContextListener {
         try {
             long paymentId = 23L;
             @SuppressWarnings("unchecked")
-            Class<UniqueFinancialService> act = (Class<UniqueFinancialService>) Class.forName("eu.onepay.payment.bank.ee.VKBankMethod");
+            Class<PaymentSolution> act = (Class<PaymentSolution>) Class.forName("eu.onepay.payment.bank.ee.VKBankMethod");
 
             uniqueFinancialServices.put(paymentId, act);
 
@@ -108,7 +108,7 @@ public class OurServletContext implements ServletContextListener {
             e.printStackTrace();
         }
         // TODO: make it a spring bean
-        serCtx.setAttribute(UniqueFinancialService.CONTEXT_KEY, uniqueFinancialServices);
+        serCtx.setAttribute(PaymentSolution.CONTEXT_KEY, uniqueFinancialServices);
 
     }
 }

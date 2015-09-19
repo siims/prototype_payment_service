@@ -11,12 +11,12 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
 
-import eu.onepay.payment.OurTransaction;
-import eu.onepay.payment.UniqueFinancialService;
+import eu.onepay.payment.PaymentTransaction;
+import eu.onepay.payment.PaymentSolution;
 import eu.onepay.payment.PaymentAction;
 import eu.onepay.payment.html.FormFactory;
 
-public class ApiServlet extends HttpServlet {
+public class PaymentRequestServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private ServletContext servCtx;
 
@@ -27,11 +27,8 @@ public class ApiServlet extends HttpServlet {
 
         PaymentRequest payRequest = getRequestAsObject(request);
 
-        UniqueFinancialService method = PaymentAction.makeTransaction(payRequest, servCtx);
-        String retString = "jsonpCallback('"+FormFactory.asForm(method).toString()+ "')";
-        response.getWriter().write(retString);
+        PaymentTransaction transaction = PaymentAction.makeTransaction(payRequest, servCtx, response);
 
-        OurTransaction transaction = method.getTransaction();
         transaction.setTimeSentOut(new Date());
         TransactionChecker.addToTransactions(transaction);
     }
