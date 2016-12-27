@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>One pay html widgets ground</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+	<script src="jswidgets/onePayService.js"></script>
+</head>
+<body>
+<h2>Payment request</h2>
+
+<script type="text/javascript">
+		onepay.add("merchant_id","1");
+		onepay.add("pay_option","1");
+		onepay.add("order_id","12345");
+		onepay.add("amount","123");
+		onepay.add("reference_no","12344");
+		onepay.add("explanation","text text text");
+</script>
+
+
+<ul style="float:left; width:20%; overflow:scroll;" id="paymethods" >
+
+</ul>
+
+<div style="float:right; width:50%; overflow:scroll;">
+<button onclick="submitForm()"> send the form to bank</button>
+<br>
+<br>
+<div id="response"></div>
+<button onclick="submitForm()"> send the form to bank</button>
+</div>
+
+
+</body>
+</html>
